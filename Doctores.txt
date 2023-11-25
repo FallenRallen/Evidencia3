@@ -1,2 +1,4 @@
 Jose, D3621, Neurologia
 Jorge, D3467, Cardiologia
+Hugo, D6901, Psicologia
+Karen, D5469, Patologia

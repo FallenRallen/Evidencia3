@@ -68,11 +68,6 @@ public class InsertarDoctor extends JFrame {
         private String id;
         private String especialidad;
 
-        public Doctor(){
-            nombre = "";
-            id = "";
-            especialidad = "";
-        }
         public Doctor(String nombre, String id, String especialidad){
             this.nombre = nombre;
             this.id = id;
@@ -97,7 +92,7 @@ public class InsertarDoctor extends JFrame {
         String Archivo = "Doctores.txt";
 
         try(BufferedWriter escritor = new BufferedWriter(new FileWriter(Archivo, true))){
-            escritor.write(newDoc.nombre + ", " + newDoc.id + ", " + newDoc.especialidad);
+            escritor.write(newDoc.nombre + ", " + newDoc.id + ", " + newDoc.especialidad + "\n");
         } catch (IOException e){
             e.printStackTrace();
         }
@@ -163,6 +158,7 @@ public class InsertarDoctor extends JFrame {
             JOptionPane.showMessageDialog(this, "Ingrese un ID para realizar la búsqueda.");
         }
     }
+
 
 
     public static void main(String[] args){

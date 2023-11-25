@@ -1,10 +1,12 @@
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.*;
+import java.util.Random;
 
 public class VentanaPaciente extends JFrame {
     private JTextField txtNombre;
-    private JTextField Txttelefono;
+    private JTextField txtTelefono;
     private JTextField txtEdad;
     private JLabel lblNombre;
     private JLabel LblSexo;
@@ -18,6 +20,11 @@ public class VentanaPaciente extends JFrame {
     private JButton btnEliminar;
     private JButton bntBuscar;
     private JButton btnVerificar;
+    private JLabel lblID;
+    private JButton btnGenerar;
+    private JTextField txtID;
+    private JLabel txtBusqueda;
+    private JTextField txtIngreso;
 
     public VentanaPaciente() {
         btnLimpiar.addActionListener(new ActionListener() {
@@ -32,24 +39,153 @@ public class VentanaPaciente extends JFrame {
                 VerificarCampos();
             }
         });
+        btnGenerar.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                InsertarIDEnTextPanel();
+            }
+        });
+        cbxSexo.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String sexoSeleccionado = (String) cbxSexo.getSelectedItem();
+            }
+        });
+        btnInsertar.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                VerificarEInsertarEnArchivo();
+            }
+        });
+        bntBuscar.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                buscarPorID();
+            }
+        });
     }
     public class Paciente{
         private String nombre;
+        private String id;
         private int edad;
         private String telefono;
+        private String sexo;
 
-        public Paciente(){
-            nombre = "";
-            edad = 0;
-            telefono = "";
-        }
-
-        public Paciente(String nombre, int edad, String telefono){
+        public Paciente(String nombre, String id, int edad, String telefono, String sexo){
             this.nombre = nombre;
+            this.id = id;
             this.edad = edad;
             this.telefono = telefono;
+            this.sexo = sexo;
         }
     }
+
+    private int GenerarNumRandom(){
+        Random random = new Random();
+        return random.nextInt(9000)+1000;
+    }
+    private void InsertarIDEnTextPanel() {
+        int numran = GenerarNumRandom();
+        String idRan = "P" + numran;
+        txtID.setText(idRan);
+    }
+
+    private void VerificarEInsertarEnArchivo(){
+        String nombre = txtNombre.getText();
+        String idTxt = txtID.getText();
+        String TxTtelefono = txtTelefono.getText();
+        String edad = txtEdad.getText();
+        String sexo = (String)cbxSexo.getSelectedItem();
+        edad = String.valueOf(edad);
+
+        if(!nombre.isEmpty() && !idTxt.isEmpty() && !edad.isEmpty() && !TxTtelefono.isEmpty() && !sexo.isEmpty()){
+            String id = txtID.getText();
+            int edadnum = Integer.parseInt(edad);
+            Paciente newPac = new Paciente(nombre, String.valueOf(id), edadnum,TxTtelefono, sexo);
+            InsertarPaciente(newPac);
+            JOptionPane.showMessageDialog(this, "Paciente Insertado en el Archivo:\n " + "Nombre: " + newPac.nombre +"\n"+ "ID: " + newPac.id + "\n" + "Edad: " + newPac.edad + "\n" +"Telefono: "+ newPac.telefono + "\n" +"Sexo: "+ newPac.sexo);
+        }
+    }
+    private void InsertarPaciente(Paciente newPac){
+        String Archivo = "Pacientes.txt";
+
+        try(BufferedWriter escritor = new BufferedWriter(new FileWriter(Archivo, true))){
+            escritor.write(newPac.nombre + ", " + newPac.id + ", " + newPac.edad +", "+ newPac.telefono+ ", "+ newPac.sexo+"\n");
+        } catch (IOException e){
+            e.printStackTrace();
+        }
+    }
+
+    private void buscarPorID(){
+        String idBusqueda = txtIngreso.getText();
+
+        if(!idBusqueda.isEmpty()){
+            Paciente finded = buscarPacientePorID(idBusqueda);
+            if(finded != null){
+                JOptionPane.showMessageDialog(this, "Paciente encontrado:\n" +
+                        "Nombre: " + finded.nombre + "\n" +
+                        "ID: " + finded.id + "\n" +
+                        "Edad: " + finded.edad + "\n"+
+                        "Telefono: " + finded.telefono + "\n" +
+                        "Sexo: " + finded.sexo);
+            } else {
+                JOptionPane.showMessageDialog(this, "No se encontró un Paciente con ese ID.");
+            }
+        } else {
+            JOptionPane.showMessageDialog(this, "Ingrese un ID para realizar la búsqueda.");
+        }
+    }
+
+    private Paciente buscarPacientePorID(String id){
+        String Archivo = "Pacientes.txt";
+        try(BufferedReader lector = new BufferedReader(new FileReader(Archivo))){
+            String linea;
+            while((linea = lector.readLine()) != null){
+                String[] partes = linea.split(", ");
+                if(partes.length == 5){
+                    String idPaciente = partes[1].trim();
+                    if(idPaciente.equals(id)){
+                        return new Paciente(partes[0], idPaciente,Integer.parseInt(partes[2]),partes[3], partes[4]);
+                    }
+                }
+            }
+
+        }catch(IOException e){
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public void limpiarCampos(){
+        txtNombre.setText("");
+        txtEdad.setText("");
+        txtTelefono.setText("");
+        txtID.setText("");
+        cbxSexo.setSelectedItem("Ninguno");
+        JOptionPane.showMessageDialog(this, "Limpieza Exitosa");
+    }
+    public void VerificarCampos(){
+        String nombre = txtNombre.getText();
+        String id = txtID.getText();
+        String edadTxt = txtEdad.getText();
+        String telefono = txtTelefono.getText();
+        String sexo = (String)cbxSexo.getSelectedItem();
+
+        if(!nombre.isEmpty() && !edadTxt.isEmpty() && !telefono.isEmpty()){
+
+            try{
+                int edadnum = Integer.parseInt(edadTxt);
+                Paciente newPac = new Paciente(nombre, id, edadnum, telefono, sexo);
+
+                JOptionPane.showMessageDialog(this, "Paciente verificado: " + newPac.nombre +", "+newPac.id +", "+ newPac.edad +", "+ newPac.telefono + ", " + newPac.sexo);
+            } catch(NumberFormatException e){
+                JOptionPane.showMessageDialog(this, "Ingrese una edad valida");
+            }
+        }else{
+            JOptionPane.showMessageDialog(this, "Por favor no deje campos en blanco y rellenelos con los datos necesarios");
+        }
+    }
+
 
     public static void main(String[] args){
         VentanaPaciente pac = new VentanaPaciente();
@@ -57,30 +193,5 @@ public class VentanaPaciente extends JFrame {
         pac.setSize(500,500);
         pac.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         pac.setVisible(true);
-    }
-    public void limpiarCampos(){
-        txtNombre.setText("");
-        txtEdad.setText("");
-        Txttelefono.setText("");
-        JOptionPane.showMessageDialog(this, "Limpieza Exitosa");
-    }
-    public void VerificarCampos(){
-        String nombre = txtNombre.getText();
-        String edadTxt = txtEdad.getText();
-        String telefono = Txttelefono.getText();
-
-        if(!nombre.isEmpty() && !edadTxt.isEmpty() && !telefono.isEmpty()){
-
-            try{
-            int edad = Integer.parseInt(edadTxt);
-            Paciente NewPac = new Paciente(nombre,edad, telefono);
-
-            JOptionPane.showMessageDialog(this, "Paciente verificado: " + NewPac.nombre +", "+ NewPac.edad +", "+ NewPac.telefono);
-            } catch(NumberFormatException e){
-                JOptionPane.showMessageDialog(this, "Ingrese una edad valida");
-            }
-        }else{
-            JOptionPane.showMessageDialog(this, "Por favor no deje campos en blanco y rellenelos con los datos necesarios");
-        }
     }
 }
