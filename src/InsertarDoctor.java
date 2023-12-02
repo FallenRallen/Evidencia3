@@ -1,12 +1,13 @@
-import javax.print.Doc;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 public class InsertarDoctor extends JFrame {
-    private JPanel MiPanel;
+    public JPanel MiPanel;
     private JTextField txtID;
     private JLabel lblID;
     private JTextField txtNombre;
@@ -16,12 +17,12 @@ public class InsertarDoctor extends JFrame {
     private JButton btnVerificar;
     private JButton btnLimpiar;
     private JButton btnBuscar;
-    private JButton btnActualizar;
     private JButton btnEliminar;
     private JButton btnGenerar;
     private JButton btnInsertar;
     private JLabel lblIngresoID;
     private JTextField txtIngreso;
+    private JButton btnConsultar;
 
     public InsertarDoctor() {
         btnLimpiar.addActionListener(new ActionListener() {
@@ -52,6 +53,18 @@ public class InsertarDoctor extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 buscarPorID();
+            }
+        });
+        btnEliminar.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                eliminarDoctor();
+            }
+        });
+        btnConsultar.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                consultarDoctores();
             }
         });
     }
@@ -159,6 +172,73 @@ public class InsertarDoctor extends JFrame {
         }
     }
 
+    private void eliminarDoctor() {
+        String idEliminar = txtIngreso.getText();
+
+        if (!idEliminar.isEmpty()) {
+            String archivo = "Doctores.txt";
+            List<String> lineas = new ArrayList<>();
+
+            try (BufferedReader lector = new BufferedReader(new FileReader(archivo))) {
+                String linea;
+                boolean doctorEncontrado = false;
+
+                while ((linea = lector.readLine()) != null) {
+                    String[] partes = linea.split(", ");
+                    if (partes.length == 3) {
+                        String idDoctor = partes[1].trim();
+                        if (!idDoctor.equals(idEliminar)) {
+                            lineas.add(linea);
+                        } else {
+                            doctorEncontrado = true;
+                        }
+                    }
+                }
+
+                if (!doctorEncontrado) {
+                    JOptionPane.showMessageDialog(this, "No se encontró un doctor con ese ID.");
+                    return;
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            try (BufferedWriter escritor = new BufferedWriter(new FileWriter(archivo))) {
+                for (String linea : lineas) {
+                    escritor.write(linea + "\n");
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+                JOptionPane.showMessageDialog(this, "Error al intentar eliminar al doctor.");
+                return;
+            }
+
+            JOptionPane.showMessageDialog(this, "Doctor eliminado con éxito.");
+        } else {
+            JOptionPane.showMessageDialog(this, "Por favor, ingrese un ID válido para eliminar.");
+        }
+    }
+    private void consultarDoctores() {
+        String archivo = "Doctores.txt";
+
+        try (BufferedReader lector = new BufferedReader(new FileReader(archivo))) {
+            StringBuilder datosDoctores = new StringBuilder();
+            String linea;
+
+            while ((linea = lector.readLine()) != null) {
+                datosDoctores.append(linea).append("\n");
+            }
+
+            if (datosDoctores.length() > 0) {
+                JOptionPane.showMessageDialog(this, "Datos de los Doctores:\n" + datosDoctores.toString());
+            } else {
+                JOptionPane.showMessageDialog(this, "No hay datos de doctores almacenados.");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Error al intentar consultar los datos de los doctores.");
+        }
+    }
 
 
     public static void main(String[] args){
