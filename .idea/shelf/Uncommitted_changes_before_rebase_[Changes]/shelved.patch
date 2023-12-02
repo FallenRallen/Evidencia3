@@ -1,0 +1,606 @@
+Index: src/BusquedaID.form
+===================================================================
+diff --git a/src/BusquedaID.form b/src/BusquedaID.form
+deleted file mode 100644
+--- a/src/BusquedaID.form	(revision 3db0ba0dec092ffee4c54dbfd128648680d2abd3)
++++ /dev/null	(revision 3db0ba0dec092ffee4c54dbfd128648680d2abd3)
+@@ -1,13 +0,0 @@
+-<?xml version="1.0" encoding="UTF-8"?>
+-<form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="BusquedaID">
+-  <grid id="27dc6" row-count="1" column-count="1" layout-manager="GridLayoutManager">
+-    <margin top="0" left="0" bottom="0" right="0"/>
+-    <constraints>
+-      <xy x="20" y="20" width="500" height="400"/>
+-      <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+-    </constraints>
+-    <properties/>
+-    <border type="none"/>
+-    <children/>
+-  </grid>
+-</form>
+Index: src/BusquedaID.java
+===================================================================
+diff --git a/src/BusquedaID.java b/src/BusquedaID.java
+deleted file mode 100644
+--- a/src/BusquedaID.java	(revision 3db0ba0dec092ffee4c54dbfd128648680d2abd3)
++++ /dev/null	(revision 3db0ba0dec092ffee4c54dbfd128648680d2abd3)
+@@ -1,2 +0,0 @@
+-package PACKAGE_NAME;public class BusquedaID {
+-}
+Index: src/InsertarDoctor.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>import javax.print.Doc;\r\nimport javax.swing.*;\r\nimport java.awt.event.ActionEvent;\r\nimport java.awt.event.ActionListener;\r\nimport java.io.*;\r\nimport java.util.Random;\r\n\r\npublic class InsertarDoctor extends JFrame {\r\n    private JPanel MiPanel;\r\n    private JTextField txtID;\r\n    private JLabel lblID;\r\n    private JTextField txtNombre;\r\n    private JLabel lblNombre;\r\n    private JLabel lblEspecialidad;\r\n    private JTextField txtEspecialidad;\r\n    private JButton btnVerificar;\r\n    private JButton btnLimpiar;\r\n    private JButton btnBuscar;\r\n    private JButton btnActualizar;\r\n    private JButton btnEliminar;\r\n    private JButton btnGenerar;\r\n    private JButton btnInsertar;\r\n    private JLabel lblIngresoID;\r\n    private JTextField txtIngreso;\r\n\r\n    public InsertarDoctor() {\r\n        btnLimpiar.addActionListener(new ActionListener() {\r\n            @Override\r\n            public void actionPerformed(ActionEvent e) {\r\n                limpiarCampos();\r\n            }\r\n        });\r\n        btnVerificar.addActionListener(new ActionListener() {\r\n            @Override\r\n            public void actionPerformed(ActionEvent e) {\r\n                VerificarCampos();\r\n            }\r\n        });\r\n        btnGenerar.addActionListener(new ActionListener() {\r\n            @Override\r\n            public void actionPerformed(ActionEvent e) {\r\n                InsertarIDEnTextPanel();\r\n            }\r\n        });\r\n        btnInsertar.addActionListener(new ActionListener() {\r\n            @Override\r\n            public void actionPerformed(ActionEvent e) {\r\n                VerificarEInsertarEnArchivo();\r\n            }\r\n        });\r\n        btnBuscar.addActionListener(new ActionListener() {\r\n            @Override\r\n            public void actionPerformed(ActionEvent e) {\r\n                buscarPorID();\r\n            }\r\n        });\r\n    }\r\n\r\n    public void limpiarCampos(){\r\n        txtID.setText(\"\");\r\n        txtEspecialidad.setText(\"\");\r\n        txtNombre.setText(\"\");\r\n        txtIngreso.setText(\"\");\r\n        JOptionPane.showMessageDialog(this, \"Limpieza Exitosa\");\r\n    }\r\n    public class Doctor{\r\n        private String nombre;\r\n        private String id;\r\n        private String especialidad;\r\n\r\n        public Doctor(){\r\n            nombre = \"\";\r\n            id = \"\";\r\n            especialidad = \"\";\r\n        }\r\n        public Doctor(String nombre, String id, String especialidad){\r\n            this.nombre = nombre;\r\n            this.id = id;\r\n            this.especialidad = especialidad;\r\n        }\r\n    }\r\n\r\n    public void VerificarCampos(){\r\n        String nombre = txtNombre.getText();\r\n        String id = txtID.getText();\r\n        String especialidad = txtEspecialidad.getText();\r\n\r\n        if(!nombre.isEmpty() && !id.isEmpty() && !especialidad.isEmpty()){\r\n            Doctor newDoc = new Doctor(id, nombre, especialidad);\r\n            JOptionPane.showMessageDialog(this, \"Doctor verificado, Listo para el registro \" + newDoc.nombre +\", \" + newDoc.id + \", \" + newDoc.especialidad);\r\n        }else{\r\n            JOptionPane.showMessageDialog(this, \"Ingrese los datos necesarios para el registro\");\r\n        }\r\n    }\r\n\r\n    private void InsertarDoctor(Doctor newDoc){\r\n        String Archivo = \"Doctores.txt\";\r\n\r\n        try(BufferedWriter escritor = new BufferedWriter(new FileWriter(Archivo, true))){\r\n            escritor.write(newDoc.nombre + \", \" + newDoc.id + \", \" + newDoc.especialidad);\r\n        } catch (IOException e){\r\n            e.printStackTrace();\r\n        }\r\n    }\r\n\r\n    private int GenerarNumRandom(){\r\n        Random random = new Random();\r\n        return random.nextInt(9000)+1000;\r\n    }\r\n    private void InsertarIDEnTextPanel() {\r\n        int numran = GenerarNumRandom();\r\n        String idRan = \"D\" + numran;\r\n        txtID.setText(idRan);\r\n    }\r\n\r\n    private void VerificarEInsertarEnArchivo(){\r\n        String nombre = txtNombre.getText();\r\n        String idTxt = txtID.getText();\r\n        String especialidad = txtEspecialidad.getText();\r\n\r\n        if(!nombre.isEmpty() && !idTxt.isEmpty() && !especialidad.isEmpty()){\r\n                String id = txtID.getText();\r\n                Doctor newDoc = new Doctor(nombre, String.valueOf(id),especialidad);\r\n                InsertarDoctor(newDoc);\r\n                JOptionPane.showMessageDialog(this, \"Doctor Insertado en el Archivo:\\n \" + \"Nombre: \" + newDoc.nombre +\"\\n\"+ \"ID: \" + newDoc.id + \"\\n\" + \"Especialidad: \" + newDoc.especialidad);\r\n        }\r\n    }\r\n\r\n    private Doctor buscarDoctorPorID(String id){\r\n        String Archivo = \"Doctores.txt\";\r\n        try(BufferedReader lector = new BufferedReader(new FileReader(Archivo))){\r\n            String linea;\r\n            while((linea = lector.readLine()) != null){\r\n                String[] partes = linea.split(\", \");\r\n                if(partes.length == 3){\r\n                    String idDoctor = partes[1].trim();\r\n                    if(idDoctor.equals(id)){\r\n                        return new Doctor(partes[0], idDoctor,partes[2]);\r\n                    }\r\n                }\r\n            }\r\n\r\n        }catch(IOException e){\r\n            e.printStackTrace();\r\n        }\r\n        return null;\r\n    }\r\n\r\n    private void buscarPorID(){\r\n        String idBusqueda = txtIngreso.getText();\r\n\r\n        if(!idBusqueda.isEmpty()){\r\n                Doctor finded = buscarDoctorPorID(idBusqueda);\r\n                if(finded != null){\r\n                    JOptionPane.showMessageDialog(this, \"Doctor encontrado:\\n\" +\r\n                            \"Nombre: \" + finded.nombre + \"\\n\" +\r\n                            \"ID: \" + finded.id + \"\\n\" +\r\n                            \"Especialidad: \" + finded.especialidad);\r\n                } else {\r\n                    JOptionPane.showMessageDialog(this, \"No se encontró un doctor con ese ID.\");\r\n                }\r\n        } else {\r\n            JOptionPane.showMessageDialog(this, \"Ingrese un ID para realizar la búsqueda.\");\r\n        }\r\n    }\r\n\r\n\r\n    public static void main(String[] args){\r\n        InsertarDoctor doc = new InsertarDoctor();\r\n        doc.setContentPane(doc.MiPanel);\r\n        doc.setSize(500,500);\r\n        doc.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);\r\n        doc.setVisible(true);\r\n    }\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/InsertarDoctor.java b/src/InsertarDoctor.java
+--- a/src/InsertarDoctor.java	(revision 3db0ba0dec092ffee4c54dbfd128648680d2abd3)
++++ b/src/InsertarDoctor.java	(date 1701229560746)
+@@ -68,11 +68,6 @@
+         private String id;
+         private String especialidad;
+ 
+-        public Doctor(){
+-            nombre = "";
+-            id = "";
+-            especialidad = "";
+-        }
+         public Doctor(String nombre, String id, String especialidad){
+             this.nombre = nombre;
+             this.id = id;
+@@ -97,7 +92,7 @@
+         String Archivo = "Doctores.txt";
+ 
+         try(BufferedWriter escritor = new BufferedWriter(new FileWriter(Archivo, true))){
+-            escritor.write(newDoc.nombre + ", " + newDoc.id + ", " + newDoc.especialidad);
++            escritor.write(newDoc.nombre + ", " + newDoc.id + ", " + newDoc.especialidad + "\n");
+         } catch (IOException e){
+             e.printStackTrace();
+         }
+@@ -165,6 +160,7 @@
+     }
+ 
+ 
++
+     public static void main(String[] args){
+         InsertarDoctor doc = new InsertarDoctor();
+         doc.setContentPane(doc.MiPanel);
+Index: src/VentanaPaciente.form
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<form xmlns=\"http://www.intellij.com/uidesigner/form/\" version=\"1\" bind-to-class=\"VentanaPaciente\">\r\n  <grid id=\"27dc6\" binding=\"miPanel\" layout-manager=\"GridLayoutManager\" row-count=\"7\" column-count=\"2\" same-size-horizontally=\"false\" same-size-vertically=\"false\" hgap=\"-1\" vgap=\"-1\">\r\n    <margin top=\"0\" left=\"0\" bottom=\"0\" right=\"0\"/>\r\n    <constraints>\r\n      <xy x=\"20\" y=\"20\" width=\"500\" height=\"400\"/>\r\n    </constraints>\r\n    <properties/>\r\n    <border type=\"none\"/>\r\n    <children>\r\n      <component id=\"a3c19\" class=\"javax.swing.JLabel\" binding=\"lblNombre\">\r\n        <constraints>\r\n          <grid row=\"0\" column=\"0\" row-span=\"1\" col-span=\"1\" vsize-policy=\"0\" hsize-policy=\"0\" anchor=\"8\" fill=\"0\" indent=\"0\" use-parent-layout=\"false\"/>\r\n        </constraints>\r\n        <properties>\r\n          <text value=\"Nombre:\"/>\r\n        </properties>\r\n      </component>\r\n      <component id=\"dea0f\" class=\"javax.swing.JLabel\" binding=\"LblSexo\">\r\n        <constraints>\r\n          <grid row=\"1\" column=\"0\" row-span=\"1\" col-span=\"1\" vsize-policy=\"0\" hsize-policy=\"0\" anchor=\"8\" fill=\"0\" indent=\"0\" use-parent-layout=\"false\"/>\r\n        </constraints>\r\n        <properties>\r\n          <text value=\"Sexo:\"/>\r\n        </properties>\r\n      </component>\r\n      <component id=\"dd42a\" class=\"javax.swing.JLabel\" binding=\"lblTelefono\">\r\n        <constraints>\r\n          <grid row=\"2\" column=\"0\" row-span=\"1\" col-span=\"1\" vsize-policy=\"0\" hsize-policy=\"0\" anchor=\"8\" fill=\"0\" indent=\"0\" use-parent-layout=\"false\"/>\r\n        </constraints>\r\n        <properties>\r\n          <text value=\"Telefono:\"/>\r\n        </properties>\r\n      </component>\r\n      <component id=\"c8b75\" class=\"javax.swing.JLabel\" binding=\"lblEdad\">\r\n        <constraints>\r\n          <grid row=\"3\" column=\"0\" row-span=\"1\" col-span=\"1\" vsize-policy=\"0\" hsize-policy=\"0\" anchor=\"8\" fill=\"0\" indent=\"0\" use-parent-layout=\"false\"/>\r\n        </constraints>\r\n        <properties>\r\n          <text value=\"Edad:\"/>\r\n        </properties>\r\n      </component>\r\n      <component id=\"b3138\" class=\"javax.swing.JTextField\" binding=\"Txttelefono\">\r\n        <constraints>\r\n          <grid row=\"2\" column=\"1\" row-span=\"1\" col-span=\"1\" vsize-policy=\"0\" hsize-policy=\"6\" anchor=\"8\" fill=\"1\" indent=\"0\" use-parent-layout=\"false\">\r\n            <preferred-size width=\"150\" height=\"-1\"/>\r\n          </grid>\r\n        </constraints>\r\n        <properties/>\r\n      </component>\r\n      <component id=\"57a1c\" class=\"javax.swing.JTextField\" binding=\"txtEdad\">\r\n        <constraints>\r\n          <grid row=\"3\" column=\"1\" row-span=\"1\" col-span=\"1\" vsize-policy=\"0\" hsize-policy=\"6\" anchor=\"8\" fill=\"1\" indent=\"0\" use-parent-layout=\"false\">\r\n            <preferred-size width=\"150\" height=\"-1\"/>\r\n          </grid>\r\n        </constraints>\r\n        <properties/>\r\n      </component>\r\n      <component id=\"e25b5\" class=\"javax.swing.JComboBox\" binding=\"cbxSexo\">\r\n        <constraints>\r\n          <grid row=\"1\" column=\"1\" row-span=\"1\" col-span=\"1\" vsize-policy=\"0\" hsize-policy=\"2\" anchor=\"8\" fill=\"1\" indent=\"0\" use-parent-layout=\"false\"/>\r\n        </constraints>\r\n        <properties>\r\n          <model>\r\n            <item value=\"Masculino\"/>\r\n            <item value=\"Femenino\"/>\r\n          </model>\r\n        </properties>\r\n      </component>\r\n      <component id=\"21113\" class=\"javax.swing.JButton\" binding=\"btnInsertar\">\r\n        <constraints>\r\n          <grid row=\"4\" column=\"1\" row-span=\"1\" col-span=\"1\" vsize-policy=\"0\" hsize-policy=\"3\" anchor=\"0\" fill=\"1\" indent=\"0\" use-parent-layout=\"false\"/>\r\n        </constraints>\r\n        <properties>\r\n          <text value=\"Insertar\"/>\r\n        </properties>\r\n      </component>\r\n      <component id=\"d4c98\" class=\"javax.swing.JTextField\" binding=\"txtNombre\">\r\n        <constraints>\r\n          <grid row=\"0\" column=\"1\" row-span=\"1\" col-span=\"1\" vsize-policy=\"0\" hsize-policy=\"6\" anchor=\"8\" fill=\"1\" indent=\"0\" use-parent-layout=\"false\">\r\n            <preferred-size width=\"150\" height=\"-1\"/>\r\n          </grid>\r\n        </constraints>\r\n        <properties/>\r\n      </component>\r\n      <component id=\"c0523\" class=\"javax.swing.JButton\" binding=\"btnActualizar\">\r\n        <constraints>\r\n          <grid row=\"4\" column=\"0\" row-span=\"1\" col-span=\"1\" vsize-policy=\"0\" hsize-policy=\"3\" anchor=\"0\" fill=\"1\" indent=\"0\" use-parent-layout=\"false\"/>\r\n        </constraints>\r\n        <properties>\r\n          <text value=\"Actualizar\"/>\r\n        </properties>\r\n      </component>\r\n      <component id=\"badef\" class=\"javax.swing.JButton\" binding=\"btnEliminar\">\r\n        <constraints>\r\n          <grid row=\"5\" column=\"0\" row-span=\"1\" col-span=\"1\" vsize-policy=\"0\" hsize-policy=\"3\" anchor=\"0\" fill=\"1\" indent=\"0\" use-parent-layout=\"false\"/>\r\n        </constraints>\r\n        <properties>\r\n          <text value=\"Eliminar\"/>\r\n        </properties>\r\n      </component>\r\n      <component id=\"7f91\" class=\"javax.swing.JButton\" binding=\"bntBuscar\">\r\n        <constraints>\r\n          <grid row=\"6\" column=\"1\" row-span=\"1\" col-span=\"1\" vsize-policy=\"0\" hsize-policy=\"3\" anchor=\"0\" fill=\"1\" indent=\"0\" use-parent-layout=\"false\"/>\r\n        </constraints>\r\n        <properties>\r\n          <text value=\"Buscar\"/>\r\n        </properties>\r\n      </component>\r\n      <component id=\"3f27e\" class=\"javax.swing.JButton\" binding=\"btnLimpiar\">\r\n        <constraints>\r\n          <grid row=\"6\" column=\"0\" row-span=\"1\" col-span=\"1\" vsize-policy=\"0\" hsize-policy=\"3\" anchor=\"0\" fill=\"1\" indent=\"0\" use-parent-layout=\"false\"/>\r\n        </constraints>\r\n        <properties>\r\n          <text value=\"Limpiar\"/>\r\n        </properties>\r\n      </component>\r\n      <component id=\"61624\" class=\"javax.swing.JButton\" binding=\"btnVerificar\">\r\n        <constraints>\r\n          <grid row=\"5\" column=\"1\" row-span=\"1\" col-span=\"1\" vsize-policy=\"0\" hsize-policy=\"3\" anchor=\"0\" fill=\"1\" indent=\"0\" use-parent-layout=\"false\"/>\r\n        </constraints>\r\n        <properties>\r\n          <text value=\"Verificar\"/>\r\n        </properties>\r\n      </component>\r\n    </children>\r\n  </grid>\r\n</form>\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/VentanaPaciente.form b/src/VentanaPaciente.form
+--- a/src/VentanaPaciente.form	(revision 3db0ba0dec092ffee4c54dbfd128648680d2abd3)
++++ b/src/VentanaPaciente.form	(date 1701228775984)
+@@ -1,6 +1,6 @@
+ <?xml version="1.0" encoding="UTF-8"?>
+ <form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="VentanaPaciente">
+-  <grid id="27dc6" binding="miPanel" layout-manager="GridLayoutManager" row-count="7" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
++  <grid id="27dc6" binding="miPanel" layout-manager="GridLayoutManager" row-count="9" column-count="3" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+     <margin top="0" left="0" bottom="0" right="0"/>
+     <constraints>
+       <xy x="20" y="20" width="500" height="400"/>
+@@ -18,7 +18,7 @@
+       </component>
+       <component id="dea0f" class="javax.swing.JLabel" binding="LblSexo">
+         <constraints>
+-          <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
++          <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+         </constraints>
+         <properties>
+           <text value="Sexo:"/>
+@@ -26,7 +26,7 @@
+       </component>
+       <component id="dd42a" class="javax.swing.JLabel" binding="lblTelefono">
+         <constraints>
+-          <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
++          <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+         </constraints>
+         <properties>
+           <text value="Telefono:"/>
+@@ -34,23 +34,25 @@
+       </component>
+       <component id="c8b75" class="javax.swing.JLabel" binding="lblEdad">
+         <constraints>
+-          <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
++          <grid row="4" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+         </constraints>
+         <properties>
+           <text value="Edad:"/>
+         </properties>
+       </component>
+-      <component id="b3138" class="javax.swing.JTextField" binding="Txttelefono">
++      <component id="b3138" class="javax.swing.JTextField" binding="txtTelefono">
+         <constraints>
+-          <grid row="2" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
++          <grid row="3" column="1" row-span="1" col-span="2" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+             <preferred-size width="150" height="-1"/>
+           </grid>
+         </constraints>
+-        <properties/>
++        <properties>
++          <text value=""/>
++        </properties>
+       </component>
+       <component id="57a1c" class="javax.swing.JTextField" binding="txtEdad">
+         <constraints>
+-          <grid row="3" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
++          <grid row="4" column="1" row-span="1" col-span="2" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+             <preferred-size width="150" height="-1"/>
+           </grid>
+         </constraints>
+@@ -58,10 +60,11 @@
+       </component>
+       <component id="e25b5" class="javax.swing.JComboBox" binding="cbxSexo">
+         <constraints>
+-          <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
++          <grid row="2" column="1" row-span="1" col-span="2" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
+         </constraints>
+         <properties>
+           <model>
++            <item value="Ninguno"/>
+             <item value="Masculino"/>
+             <item value="Femenino"/>
+           </model>
+@@ -69,7 +72,7 @@
+       </component>
+       <component id="21113" class="javax.swing.JButton" binding="btnInsertar">
+         <constraints>
+-          <grid row="4" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
++          <grid row="6" column="1" row-span="1" col-span="2" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+         </constraints>
+         <properties>
+           <text value="Insertar"/>
+@@ -77,7 +80,7 @@
+       </component>
+       <component id="d4c98" class="javax.swing.JTextField" binding="txtNombre">
+         <constraints>
+-          <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
++          <grid row="0" column="1" row-span="1" col-span="2" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+             <preferred-size width="150" height="-1"/>
+           </grid>
+         </constraints>
+@@ -85,7 +88,7 @@
+       </component>
+       <component id="c0523" class="javax.swing.JButton" binding="btnActualizar">
+         <constraints>
+-          <grid row="4" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
++          <grid row="6" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+         </constraints>
+         <properties>
+           <text value="Actualizar"/>
+@@ -93,34 +96,78 @@
+       </component>
+       <component id="badef" class="javax.swing.JButton" binding="btnEliminar">
+         <constraints>
+-          <grid row="5" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
++          <grid row="7" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+         </constraints>
+         <properties>
+           <text value="Eliminar"/>
++        </properties>
++      </component>
++      <component id="3f27e" class="javax.swing.JButton" binding="btnLimpiar">
++        <constraints>
++          <grid row="8" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
++        </constraints>
++        <properties>
++          <text value="Limpiar"/>
++        </properties>
++      </component>
++      <component id="61624" class="javax.swing.JButton" binding="btnVerificar">
++        <constraints>
++          <grid row="7" column="1" row-span="1" col-span="2" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
++        </constraints>
++        <properties>
++          <text value="Verificar"/>
++        </properties>
++      </component>
++      <component id="23da8" class="javax.swing.JLabel" binding="lblID">
++        <constraints>
++          <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
++        </constraints>
++        <properties>
++          <text value="ID: "/>
++        </properties>
++      </component>
++      <component id="42236" class="javax.swing.JButton" binding="btnGenerar">
++        <constraints>
++          <grid row="1" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
++        </constraints>
++        <properties>
++          <text value="Generar ID"/>
+         </properties>
+       </component>
+       <component id="7f91" class="javax.swing.JButton" binding="bntBuscar">
+         <constraints>
+-          <grid row="6" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
++          <grid row="8" column="1" row-span="1" col-span="2" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+         </constraints>
+         <properties>
+           <text value="Buscar"/>
+         </properties>
+       </component>
+-      <component id="3f27e" class="javax.swing.JButton" binding="btnLimpiar">
++      <component id="75f09" class="javax.swing.JTextField" binding="txtID">
+         <constraints>
+-          <grid row="6" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
++          <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
++            <preferred-size width="150" height="-1"/>
++          </grid>
+         </constraints>
+         <properties>
+-          <text value="Limpiar"/>
++          <editable value="false"/>
+         </properties>
+       </component>
+-      <component id="61624" class="javax.swing.JButton" binding="btnVerificar">
++      <component id="b06a3" class="javax.swing.JLabel" binding="txtBusqueda">
+         <constraints>
+-          <grid row="5" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
++          <grid row="5" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+         </constraints>
+         <properties>
+-          <text value="Verificar"/>
++          <text value="Buscar por ID:"/>
++        </properties>
++      </component>
++      <component id="84cea" class="javax.swing.JTextField" binding="txtIngreso">
++        <constraints>
++          <grid row="5" column="1" row-span="1" col-span="2" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
++            <preferred-size width="150" height="-1"/>
++          </grid>
++        </constraints>
++        <properties>
++          <text value=""/>
+         </properties>
+       </component>
+     </children>
+Index: Pacientes.txt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Pacientes.txt b/Pacientes.txt
+--- a/Pacientes.txt	(revision 3db0ba0dec092ffee4c54dbfd128648680d2abd3)
++++ b/Pacientes.txt	(date 1701229031260)
+@@ -1,0 +1,2 @@
++Jorge, P6001, 22, 1234567890, Masculino
++Alicia, P9945, 22, 1234567890, Femenino
+Index: src/VentanaPaciente.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>import javax.swing.*;\r\nimport java.awt.event.ActionEvent;\r\nimport java.awt.event.ActionListener;\r\n\r\npublic class VentanaPaciente extends JFrame {\r\n    private JTextField txtNombre;\r\n    private JTextField Txttelefono;\r\n    private JTextField txtEdad;\r\n    private JLabel lblNombre;\r\n    private JLabel LblSexo;\r\n    private JComboBox cbxSexo;\r\n    private JLabel lblTelefono;\r\n    private JLabel lblEdad;\r\n    private JButton btnInsertar;\r\n    private JButton btnLimpiar;\r\n    private JPanel miPanel;\r\n    private JButton btnActualizar;\r\n    private JButton btnEliminar;\r\n    private JButton bntBuscar;\r\n    private JButton btnVerificar;\r\n\r\n    public VentanaPaciente() {\r\n        btnLimpiar.addActionListener(new ActionListener() {\r\n            @Override\r\n            public void actionPerformed(ActionEvent e) {\r\n                limpiarCampos();\r\n            }\r\n        });\r\n        btnVerificar.addActionListener(new ActionListener() {\r\n            @Override\r\n            public void actionPerformed(ActionEvent e) {\r\n                VerificarCampos();\r\n            }\r\n        });\r\n    }\r\n    public class Paciente{\r\n        private String nombre;\r\n        private int edad;\r\n        private String telefono;\r\n\r\n        public Paciente(){\r\n            nombre = \"\";\r\n            edad = 0;\r\n            telefono = \"\";\r\n        }\r\n\r\n        public Paciente(String nombre, int edad, String telefono){\r\n            this.nombre = nombre;\r\n            this.edad = edad;\r\n            this.telefono = telefono;\r\n        }\r\n    }\r\n\r\n    public static void main(String[] args){\r\n        VentanaPaciente pac = new VentanaPaciente();\r\n        pac.setContentPane(pac.miPanel);\r\n        pac.setSize(500,500);\r\n        pac.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);\r\n        pac.setVisible(true);\r\n    }\r\n    public void limpiarCampos(){\r\n        txtNombre.setText(\"\");\r\n        txtEdad.setText(\"\");\r\n        Txttelefono.setText(\"\");\r\n        JOptionPane.showMessageDialog(this, \"Limpieza Exitosa\");\r\n    }\r\n    public void VerificarCampos(){\r\n        String nombre = txtNombre.getText();\r\n        String edadTxt = txtEdad.getText();\r\n        String telefono = Txttelefono.getText();\r\n\r\n        if(!nombre.isEmpty() && !edadTxt.isEmpty() && !telefono.isEmpty()){\r\n\r\n            try{\r\n            int edad = Integer.parseInt(edadTxt);\r\n            Paciente NewPac = new Paciente(nombre,edad, telefono);\r\n\r\n            JOptionPane.showMessageDialog(this, \"Paciente verificado: \" + NewPac.nombre +\", \"+ NewPac.edad +\", \"+ NewPac.telefono);\r\n            } catch(NumberFormatException e){\r\n                JOptionPane.showMessageDialog(this, \"Ingrese una edad valida\");\r\n            }\r\n        }else{\r\n            JOptionPane.showMessageDialog(this, \"Por favor no deje campos en blanco y rellenelos con los datos necesarios\");\r\n        }\r\n    }\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/VentanaPaciente.java b/src/VentanaPaciente.java
+--- a/src/VentanaPaciente.java	(revision 3db0ba0dec092ffee4c54dbfd128648680d2abd3)
++++ b/src/VentanaPaciente.java	(date 1701228967131)
+@@ -1,10 +1,12 @@
+ import javax.swing.*;
+ import java.awt.event.ActionEvent;
+ import java.awt.event.ActionListener;
++import java.io.*;
++import java.util.Random;
+ 
+ public class VentanaPaciente extends JFrame {
+     private JTextField txtNombre;
+-    private JTextField Txttelefono;
++    private JTextField txtTelefono;
+     private JTextField txtEdad;
+     private JLabel lblNombre;
+     private JLabel LblSexo;
+@@ -18,6 +20,11 @@
+     private JButton btnEliminar;
+     private JButton bntBuscar;
+     private JButton btnVerificar;
++    private JLabel lblID;
++    private JButton btnGenerar;
++    private JTextField txtID;
++    private JLabel txtBusqueda;
++    private JTextField txtIngreso;
+ 
+     public VentanaPaciente() {
+         btnLimpiar.addActionListener(new ActionListener() {
+@@ -32,50 +39,145 @@
+                 VerificarCampos();
+             }
+         });
++        btnGenerar.addActionListener(new ActionListener() {
++            @Override
++            public void actionPerformed(ActionEvent e) {
++                InsertarIDEnTextPanel();
++            }
++        });
++        cbxSexo.addActionListener(new ActionListener() {
++            @Override
++            public void actionPerformed(ActionEvent e) {
++                String sexoSeleccionado = (String) cbxSexo.getSelectedItem();
++            }
++        });
++        btnInsertar.addActionListener(new ActionListener() {
++            @Override
++            public void actionPerformed(ActionEvent e) {
++                VerificarEInsertarEnArchivo();
++            }
++        });
++        bntBuscar.addActionListener(new ActionListener() {
++            @Override
++            public void actionPerformed(ActionEvent e) {
++                buscarPorID();
++            }
++        });
+     }
+     public class Paciente{
+         private String nombre;
++        private String id;
+         private int edad;
+         private String telefono;
++        private String sexo;
+ 
+-        public Paciente(){
+-            nombre = "";
+-            edad = 0;
+-            telefono = "";
+-        }
+-
+-        public Paciente(String nombre, int edad, String telefono){
++        public Paciente(String nombre, String id, int edad, String telefono, String sexo){
+             this.nombre = nombre;
++            this.id = id;
+             this.edad = edad;
+             this.telefono = telefono;
++            this.sexo = sexo;
+         }
+     }
++
++    private int GenerarNumRandom(){
++        Random random = new Random();
++        return random.nextInt(9000)+1000;
++    }
++    private void InsertarIDEnTextPanel() {
++        int numran = GenerarNumRandom();
++        String idRan = "P" + numran;
++        txtID.setText(idRan);
++    }
+ 
+-    public static void main(String[] args){
+-        VentanaPaciente pac = new VentanaPaciente();
+-        pac.setContentPane(pac.miPanel);
+-        pac.setSize(500,500);
+-        pac.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+-        pac.setVisible(true);
+-    }
++    private void VerificarEInsertarEnArchivo(){
++        String nombre = txtNombre.getText();
++        String idTxt = txtID.getText();
++        String TxTtelefono = txtTelefono.getText();
++        String edad = txtEdad.getText();
++        String sexo = (String)cbxSexo.getSelectedItem();
++        edad = String.valueOf(edad);
++
++        if(!nombre.isEmpty() && !idTxt.isEmpty() && !edad.isEmpty() && !TxTtelefono.isEmpty() && !sexo.isEmpty()){
++            String id = txtID.getText();
++            int edadnum = Integer.parseInt(edad);
++            Paciente newPac = new Paciente(nombre, String.valueOf(id), edadnum,TxTtelefono, sexo);
++            InsertarPaciente(newPac);
++            JOptionPane.showMessageDialog(this, "Paciente Insertado en el Archivo:\n " + "Nombre: " + newPac.nombre +"\n"+ "ID: " + newPac.id + "\n" + "Edad: " + newPac.edad + "\n" +"Telefono: "+ newPac.telefono + "\n" +"Sexo: "+ newPac.sexo);
++        }
++    }
++    private void InsertarPaciente(Paciente newPac){
++        String Archivo = "Pacientes.txt";
++
++        try(BufferedWriter escritor = new BufferedWriter(new FileWriter(Archivo, true))){
++            escritor.write(newPac.nombre + ", " + newPac.id + ", " + newPac.edad +", "+ newPac.telefono+ ", "+ newPac.sexo+"\n");
++        } catch (IOException e){
++            e.printStackTrace();
++        }
++    }
++
++    private void buscarPorID(){
++        String idBusqueda = txtIngreso.getText();
++
++        if(!idBusqueda.isEmpty()){
++            Paciente finded = buscarPacientePorID(idBusqueda);
++            if(finded != null){
++                JOptionPane.showMessageDialog(this, "Paciente encontrado:\n" +
++                        "Nombre: " + finded.nombre + "\n" +
++                        "ID: " + finded.id + "\n" +
++                        "Edad: " + finded.edad + "\n"+
++                        "Telefono: " + finded.telefono + "\n" +
++                        "Sexo: " + finded.sexo);
++            } else {
++                JOptionPane.showMessageDialog(this, "No se encontró un Paciente con ese ID.");
++            }
++        } else {
++            JOptionPane.showMessageDialog(this, "Ingrese un ID para realizar la búsqueda.");
++        }
++    }
++
++    private Paciente buscarPacientePorID(String id){
++        String Archivo = "Pacientes.txt";
++        try(BufferedReader lector = new BufferedReader(new FileReader(Archivo))){
++            String linea;
++            while((linea = lector.readLine()) != null){
++                String[] partes = linea.split(", ");
++                if(partes.length == 5){
++                    String idPaciente = partes[1].trim();
++                    if(idPaciente.equals(id)){
++                        return new Paciente(partes[0], idPaciente,Integer.parseInt(partes[2]),partes[3], partes[4]);
++                    }
++                }
++            }
++
++        }catch(IOException e){
++            e.printStackTrace();
++        }
++        return null;
++    }
++
+     public void limpiarCampos(){
+         txtNombre.setText("");
+         txtEdad.setText("");
+-        Txttelefono.setText("");
++        txtTelefono.setText("");
++        txtID.setText("");
++        cbxSexo.setSelectedItem("Ninguno");
+         JOptionPane.showMessageDialog(this, "Limpieza Exitosa");
+     }
+     public void VerificarCampos(){
+         String nombre = txtNombre.getText();
++        String id = txtID.getText();
+         String edadTxt = txtEdad.getText();
+-        String telefono = Txttelefono.getText();
++        String telefono = txtTelefono.getText();
++        String sexo = (String)cbxSexo.getSelectedItem();
+ 
+         if(!nombre.isEmpty() && !edadTxt.isEmpty() && !telefono.isEmpty()){
+ 
+             try{
+-            int edad = Integer.parseInt(edadTxt);
+-            Paciente NewPac = new Paciente(nombre,edad, telefono);
++                int edadnum = Integer.parseInt(edadTxt);
++                Paciente newPac = new Paciente(nombre, id, edadnum, telefono, sexo);
+ 
+-            JOptionPane.showMessageDialog(this, "Paciente verificado: " + NewPac.nombre +", "+ NewPac.edad +", "+ NewPac.telefono);
++                JOptionPane.showMessageDialog(this, "Paciente verificado: " + newPac.nombre +", "+newPac.id +", "+ newPac.edad +", "+ newPac.telefono + ", " + newPac.sexo);
+             } catch(NumberFormatException e){
+                 JOptionPane.showMessageDialog(this, "Ingrese una edad valida");
+             }
+@@ -83,4 +185,13 @@
+             JOptionPane.showMessageDialog(this, "Por favor no deje campos en blanco y rellenelos con los datos necesarios");
+         }
+     }
++
++
++    public static void main(String[] args){
++        VentanaPaciente pac = new VentanaPaciente();
++        pac.setContentPane(pac.miPanel);
++        pac.setSize(500,500);
++        pac.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
++        pac.setVisible(true);
++    }
+ }
+Index: Doctores.txt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>Jose, D3621, Neurologia\r\nJorge, D3467, Cardiologia
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Doctores.txt b/Doctores.txt
+--- a/Doctores.txt	(revision 3db0ba0dec092ffee4c54dbfd128648680d2abd3)
++++ b/Doctores.txt	(date 1700935337288)
+@@ -1,2 +1,4 @@
+ Jose, D3621, Neurologia
+-Jorge, D3467, Cardiologia
+\ No newline at end of file
++Jorge, D3467, Cardiologia
++Hugo, D6901, Psicologia
++Karen, D5469, Patologia
+Index: .idea/workspace.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<project version=\"4\">\r\n  <component name=\"AutoImportSettings\">\r\n    <option name=\"autoReloadType\" value=\"SELECTIVE\" />\r\n  </component>\r\n  <component name=\"ChangeListManager\">\r\n    <list default=\"true\" id=\"4626b4c4-72a3-43a5-93e8-c3876e5a2187\" name=\"Changes\" comment=\"AVANCE 2 DE EVIDENCIA FINAL\" />\r\n    <option name=\"SHOW_DIALOG\" value=\"false\" />\r\n    <option name=\"HIGHLIGHT_CONFLICTS\" value=\"true\" />\r\n    <option name=\"HIGHLIGHT_NON_ACTIVE_CHANGELIST\" value=\"false\" />\r\n    <option name=\"LAST_RESOLUTION\" value=\"IGNORE\" />\r\n  </component>\r\n  <component name=\"FileTemplateManagerImpl\">\r\n    <option name=\"RECENT_TEMPLATES\">\r\n      <list>\r\n        <option value=\"Class\" />\r\n      </list>\r\n    </option>\r\n  </component>\r\n  <component name=\"Git.Settings\">\r\n    <option name=\"RECENT_GIT_ROOT_PATH\" value=\"$PROJECT_DIR$\" />\r\n    <option name=\"UPDATE_TYPE\" value=\"REBASE\" />\r\n  </component>\r\n  <component name=\"ProjectId\" id=\"2YdD2xy62zAPddfNHHWILoa3NKl\" />\r\n  <component name=\"ProjectLevelVcsManager\" settingsEditedManually=\"true\" />\r\n  <component name=\"ProjectViewState\">\r\n    <option name=\"hideEmptyMiddlePackages\" value=\"true\" />\r\n    <option name=\"showLibraryContents\" value=\"true\" />\r\n  </component>\r\n  <component name=\"PropertiesComponent\">{\r\n  &quot;keyToString&quot;: {\r\n    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,\r\n    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,\r\n    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,\r\n    &quot;UI_DESIGNER_EDITOR_MODE.UIDesignerToolWindowManager.SHOW&quot;: &quot;true&quot;,\r\n    &quot;git-widget-placeholder&quot;: &quot;master&quot;,\r\n    &quot;onboarding.tips.debug.path&quot;: &quot;C:/Computacion en java/Evidencia3/src/Main.java&quot;,\r\n    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,\r\n    &quot;project.structure.proportion&quot;: &quot;0.0&quot;,\r\n    &quot;project.structure.side.proportion&quot;: &quot;0.0&quot;\r\n  }\r\n}</component>\r\n  <component name=\"SpellCheckerSettings\" RuntimeDictionaries=\"0\" Folders=\"0\" CustomDictionaries=\"0\" DefaultDictionary=\"application-level\" UseSingleDictionary=\"true\" transferred=\"true\" />\r\n  <component name=\"TaskManager\">\r\n    <task active=\"true\" id=\"Default\" summary=\"Default task\">\r\n      <changelist id=\"4626b4c4-72a3-43a5-93e8-c3876e5a2187\" name=\"Changes\" comment=\"\" />\r\n      <created>1700846361266</created>\r\n      <option name=\"number\" value=\"Default\" />\r\n      <option name=\"presentableId\" value=\"Default\" />\r\n      <updated>1700846361266</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00001\" summary=\"AVANCE 2 DE EVIDENCIA FINAL\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1700883699845</created>\r\n      <option name=\"number\" value=\"00001\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00001\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1700883699845</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00002\" summary=\"AVANCE 2 DE EVIDENCIA FINAL\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1700883714586</created>\r\n      <option name=\"number\" value=\"00002\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00002\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1700883714586</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00003\" summary=\"AVANCE 2 DE EVIDENCIA FINAL\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1700883776474</created>\r\n      <option name=\"number\" value=\"00003\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00003\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1700883776474</updated>\r\n    </task>\r\n    <option name=\"localTasksCounter\" value=\"4\" />\r\n    <servers />\r\n  </component>\r\n  <component name=\"Vcs.Log.Tabs.Properties\">\r\n    <option name=\"TAB_STATES\">\r\n      <map>\r\n        <entry key=\"MAIN\">\r\n          <value>\r\n            <State />\r\n          </value>\r\n        </entry>\r\n      </map>\r\n    </option>\r\n  </component>\r\n  <component name=\"VcsManagerConfiguration\">\r\n    <MESSAGE value=\"AVANCE 2 DE EVIDENCIA FINAL\" />\r\n    <option name=\"LAST_COMMIT_MESSAGE\" value=\"AVANCE 2 DE EVIDENCIA FINAL\" />\r\n  </component>\r\n  <component name=\"XDebuggerManager\">\r\n    <breakpoint-manager>\r\n      <breakpoints>\r\n        <line-breakpoint enabled=\"true\" type=\"java-method\">\r\n          <url>file://$PROJECT_DIR$/src/InsertarDoctor.java</url>\r\n          <line>115</line>\r\n          <properties class=\"InsertarDoctor.InsertarDoctor\">\r\n            <option name=\"EMULATED\" value=\"true\" />\r\n            <option name=\"WATCH_EXIT\" value=\"false\" />\r\n          </properties>\r\n          <option name=\"timeStamp\" value=\"3\" />\r\n        </line-breakpoint>\r\n        <line-breakpoint enabled=\"true\" type=\"java-method\">\r\n          <url>file://$PROJECT_DIR$/src/InsertarDoctor.java</url>\r\n          <line>148</line>\r\n          <properties class=\"InsertarDoctor.InsertarDoctor\">\r\n            <option name=\"EMULATED\" value=\"true\" />\r\n            <option name=\"WATCH_EXIT\" value=\"false\" />\r\n          </properties>\r\n          <option name=\"timeStamp\" value=\"4\" />\r\n        </line-breakpoint>\r\n      </breakpoints>\r\n    </breakpoint-manager>\r\n  </component>\r\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/workspace.xml b/.idea/workspace.xml
+--- a/.idea/workspace.xml	(revision 3db0ba0dec092ffee4c54dbfd128648680d2abd3)
++++ b/.idea/workspace.xml	(date 1701229811509)
+@@ -4,7 +4,7 @@
+     <option name="autoReloadType" value="SELECTIVE" />
+   </component>
+   <component name="ChangeListManager">
+-    <list default="true" id="4626b4c4-72a3-43a5-93e8-c3876e5a2187" name="Changes" comment="AVANCE 2 DE EVIDENCIA FINAL" />
++    <list default="true" id="4626b4c4-72a3-43a5-93e8-c3876e5a2187" name="Changes" comment="AVANCE 3 DE EVIDENCIA FINAL" />
+     <option name="SHOW_DIALOG" value="false" />
+     <option name="HIGHLIGHT_CONFLICTS" value="true" />
+     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+@@ -16,10 +16,15 @@
+         <option value="Class" />
+       </list>
+     </option>
++  </component>
++  <component name="Git.Merge.Settings">
++    <option name="BRANCH" value="master" />
++  </component>
++  <component name="Git.Rebase.Settings">
++    <option name="NEW_BASE" value="origin/master" />
+   </component>
+   <component name="Git.Settings">
+     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+-    <option name="UPDATE_TYPE" value="REBASE" />
+   </component>
+   <component name="ProjectId" id="2YdD2xy62zAPddfNHHWILoa3NKl" />
+   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+@@ -73,7 +78,23 @@
+       <option name="project" value="LOCAL" />
+       <updated>1700883776474</updated>
+     </task>
+-    <option name="localTasksCounter" value="4" />
++    <task id="LOCAL-00004" summary="AVANCE 2 DE EVIDENCIA FINAL">
++      <option name="closed" value="true" />
++      <created>1700883912327</created>
++      <option name="number" value="00004" />
++      <option name="presentableId" value="LOCAL-00004" />
++      <option name="project" value="LOCAL" />
++      <updated>1700883912327</updated>
++    </task>
++    <task id="LOCAL-00005" summary="AVANCE 2 DE EVIDENCIA FINAL">
++      <option name="closed" value="true" />
++      <created>1700884132114</created>
++      <option name="number" value="00005" />
++      <option name="presentableId" value="LOCAL-00005" />
++      <option name="project" value="LOCAL" />
++      <updated>1700884132115</updated>
++    </task>
++    <option name="localTasksCounter" value="6" />
+     <servers />
+   </component>
+   <component name="Vcs.Log.Tabs.Properties">
+@@ -94,23 +115,29 @@
+   <component name="XDebuggerManager">
+     <breakpoint-manager>
+       <breakpoints>
+-        <line-breakpoint enabled="true" type="java-method">
++        <line-breakpoint enabled="true" type="java-line">
+           <url>file://$PROJECT_DIR$/src/InsertarDoctor.java</url>
+-          <line>115</line>
+-          <properties class="InsertarDoctor.InsertarDoctor">
+-            <option name="EMULATED" value="true" />
+-            <option name="WATCH_EXIT" value="false" />
+-          </properties>
+-          <option name="timeStamp" value="3" />
++          <line>44</line>
++          <option name="timeStamp" value="7" />
++        </line-breakpoint>
++        <line-breakpoint enabled="true" type="java-line">
++          <url>file://$PROJECT_DIR$/src/InsertarDoctor.java</url>
++          <line>26</line>
++          <option name="timeStamp" value="8" />
++        </line-breakpoint>
++        <line-breakpoint enabled="true" type="java-line">
++          <url>file://$PROJECT_DIR$/src/InsertarDoctor.java</url>
++          <line>101</line>
++          <option name="timeStamp" value="13" />
+         </line-breakpoint>
+         <line-breakpoint enabled="true" type="java-method">
+           <url>file://$PROJECT_DIR$/src/InsertarDoctor.java</url>
+-          <line>148</line>
+-          <properties class="InsertarDoctor.InsertarDoctor">
++          <line>123</line>
++          <properties class="InsertarDoctor" method="buscarDoctorPorID">
+             <option name="EMULATED" value="true" />
+             <option name="WATCH_EXIT" value="false" />
+           </properties>
+-          <option name="timeStamp" value="4" />
++          <option name="timeStamp" value="12" />
+         </line-breakpoint>
+       </breakpoints>
+     </breakpoint-manager>
