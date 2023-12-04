@@ -1,0 +1,3 @@
+
+P9945, C4344, 2023-12-03, 04:30, Nombre: Alicia ID: P9945 Edad: 22 Teléfono: 1234567890 Género: Femenino, Hola
+P3739, C8183, 2023-12-04, 1:30, Nombre: Carlos ID: P3739 Edad: 23 Teléfono: 1234567890 Género: Masculino, Adios
