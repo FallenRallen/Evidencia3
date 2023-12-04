@@ -1,0 +1,1100 @@
+Index: src/InsertarDoctor.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>import javax.print.Doc;\r\nimport javax.swing.*;\r\nimport java.awt.event.ActionEvent;\r\nimport java.awt.event.ActionListener;\r\nimport java.io.*;\r\nimport java.util.Random;\r\n\r\npublic class InsertarDoctor extends JFrame {\r\n    private JPanel MiPanel;\r\n    private JTextField txtID;\r\n    private JLabel lblID;\r\n    private JTextField txtNombre;\r\n    private JLabel lblNombre;\r\n    private JLabel lblEspecialidad;\r\n    private JTextField txtEspecialidad;\r\n    private JButton btnVerificar;\r\n    private JButton btnLimpiar;\r\n    private JButton btnBuscar;\r\n    private JButton btnActualizar;\r\n    private JButton btnEliminar;\r\n    private JButton btnGenerar;\r\n    private JButton btnInsertar;\r\n    private JLabel lblIngresoID;\r\n    private JTextField txtIngreso;\r\n\r\n    public InsertarDoctor() {\r\n        btnLimpiar.addActionListener(new ActionListener() {\r\n            @Override\r\n            public void actionPerformed(ActionEvent e) {\r\n                limpiarCampos();\r\n            }\r\n        });\r\n        btnVerificar.addActionListener(new ActionListener() {\r\n            @Override\r\n            public void actionPerformed(ActionEvent e) {\r\n                VerificarCampos();\r\n            }\r\n        });\r\n        btnGenerar.addActionListener(new ActionListener() {\r\n            @Override\r\n            public void actionPerformed(ActionEvent e) {\r\n                InsertarIDEnTextPanel();\r\n            }\r\n        });\r\n        btnInsertar.addActionListener(new ActionListener() {\r\n            @Override\r\n            public void actionPerformed(ActionEvent e) {\r\n                VerificarEInsertarEnArchivo();\r\n            }\r\n        });\r\n        btnBuscar.addActionListener(new ActionListener() {\r\n            @Override\r\n            public void actionPerformed(ActionEvent e) {\r\n                buscarPorID();\r\n            }\r\n        });\r\n    }\r\n\r\n    public void limpiarCampos(){\r\n        txtID.setText(\"\");\r\n        txtEspecialidad.setText(\"\");\r\n        txtNombre.setText(\"\");\r\n        txtIngreso.setText(\"\");\r\n        JOptionPane.showMessageDialog(this, \"Limpieza Exitosa\");\r\n    }\r\n    public class Doctor{\r\n        private String nombre;\r\n        private String id;\r\n        private String especialidad;\r\n\r\n        public Doctor(String nombre, String id, String especialidad){\r\n            this.nombre = nombre;\r\n            this.id = id;\r\n            this.especialidad = especialidad;\r\n        }\r\n    }\r\n\r\n    public void VerificarCampos(){\r\n        String nombre = txtNombre.getText();\r\n        String id = txtID.getText();\r\n        String especialidad = txtEspecialidad.getText();\r\n\r\n        if(!nombre.isEmpty() && !id.isEmpty() && !especialidad.isEmpty()){\r\n            Doctor newDoc = new Doctor(id, nombre, especialidad);\r\n            JOptionPane.showMessageDialog(this, \"Doctor verificado, Listo para el registro \" + newDoc.nombre +\", \" + newDoc.id + \", \" + newDoc.especialidad);\r\n        }else{\r\n            JOptionPane.showMessageDialog(this, \"Ingrese los datos necesarios para el registro\");\r\n        }\r\n    }\r\n\r\n    private void InsertarDoctor(Doctor newDoc){\r\n        String Archivo = \"Doctores.txt\";\r\n\r\n        try(BufferedWriter escritor = new BufferedWriter(new FileWriter(Archivo, true))){\r\n            escritor.write(newDoc.nombre + \", \" + newDoc.id + \", \" + newDoc.especialidad + \"\\n\");\r\n        } catch (IOException e){\r\n            e.printStackTrace();\r\n        }\r\n    }\r\n\r\n    private int GenerarNumRandom(){\r\n        Random random = new Random();\r\n        return random.nextInt(9000)+1000;\r\n    }\r\n    private void InsertarIDEnTextPanel() {\r\n        int numran = GenerarNumRandom();\r\n        String idRan = \"D\" + numran;\r\n        txtID.setText(idRan);\r\n    }\r\n\r\n    private void VerificarEInsertarEnArchivo(){\r\n        String nombre = txtNombre.getText();\r\n        String idTxt = txtID.getText();\r\n        String especialidad = txtEspecialidad.getText();\r\n\r\n        if(!nombre.isEmpty() && !idTxt.isEmpty() && !especialidad.isEmpty()){\r\n                String id = txtID.getText();\r\n                Doctor newDoc = new Doctor(nombre, String.valueOf(id),especialidad);\r\n                InsertarDoctor(newDoc);\r\n                JOptionPane.showMessageDialog(this, \"Doctor Insertado en el Archivo:\\n \" + \"Nombre: \" + newDoc.nombre +\"\\n\"+ \"ID: \" + newDoc.id + \"\\n\" + \"Especialidad: \" + newDoc.especialidad);\r\n        }\r\n    }\r\n\r\n    private Doctor buscarDoctorPorID(String id){\r\n        String Archivo = \"Doctores.txt\";\r\n        try(BufferedReader lector = new BufferedReader(new FileReader(Archivo))){\r\n            String linea;\r\n            while((linea = lector.readLine()) != null){\r\n                String[] partes = linea.split(\", \");\r\n                if(partes.length == 3){\r\n                    String idDoctor = partes[1].trim();\r\n                    if(idDoctor.equals(id)){\r\n                        return new Doctor(partes[0], idDoctor,partes[2]);\r\n                    }\r\n                }\r\n            }\r\n\r\n        }catch(IOException e){\r\n            e.printStackTrace();\r\n        }\r\n        return null;\r\n    }\r\n\r\n    private void buscarPorID(){\r\n        String idBusqueda = txtIngreso.getText();\r\n\r\n        if(!idBusqueda.isEmpty()){\r\n                Doctor finded = buscarDoctorPorID(idBusqueda);\r\n                if(finded != null){\r\n                    JOptionPane.showMessageDialog(this, \"Doctor encontrado:\\n\" +\r\n                            \"Nombre: \" + finded.nombre + \"\\n\" +\r\n                            \"ID: \" + finded.id + \"\\n\" +\r\n                            \"Especialidad: \" + finded.especialidad);\r\n                } else {\r\n                    JOptionPane.showMessageDialog(this, \"No se encontró un doctor con ese ID.\");\r\n                }\r\n        } else {\r\n            JOptionPane.showMessageDialog(this, \"Ingrese un ID para realizar la búsqueda.\");\r\n        }\r\n    }\r\n\r\n\r\n\r\n    public static void main(String[] args){\r\n        InsertarDoctor doc = new InsertarDoctor();\r\n        doc.setContentPane(doc.MiPanel);\r\n        doc.setSize(500,500);\r\n        doc.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);\r\n        doc.setVisible(true);\r\n    }\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/InsertarDoctor.java b/src/InsertarDoctor.java
+--- a/src/InsertarDoctor.java	(revision 8cf69ad15458754b16f490785e281963d8ad9545)
++++ b/src/InsertarDoctor.java	(date 1701537883353)
+@@ -1,12 +1,13 @@
+-import javax.print.Doc;
+ import javax.swing.*;
+ import java.awt.event.ActionEvent;
+ import java.awt.event.ActionListener;
+ import java.io.*;
++import java.util.ArrayList;
++import java.util.List;
+ import java.util.Random;
+ 
+ public class InsertarDoctor extends JFrame {
+-    private JPanel MiPanel;
++    public JPanel MiPanel;
+     private JTextField txtID;
+     private JLabel lblID;
+     private JTextField txtNombre;
+@@ -16,12 +17,12 @@
+     private JButton btnVerificar;
+     private JButton btnLimpiar;
+     private JButton btnBuscar;
+-    private JButton btnActualizar;
+     private JButton btnEliminar;
+     private JButton btnGenerar;
+     private JButton btnInsertar;
+     private JLabel lblIngresoID;
+     private JTextField txtIngreso;
++    private JButton btnConsultar;
+ 
+     public InsertarDoctor() {
+         btnLimpiar.addActionListener(new ActionListener() {
+@@ -54,6 +55,18 @@
+                 buscarPorID();
+             }
+         });
++        btnEliminar.addActionListener(new ActionListener() {
++            @Override
++            public void actionPerformed(ActionEvent e) {
++                eliminarDoctor();
++            }
++        });
++        btnConsultar.addActionListener(new ActionListener() {
++            @Override
++            public void actionPerformed(ActionEvent e) {
++                consultarDoctores();
++            }
++        });
+     }
+ 
+     public void limpiarCampos(){
+@@ -159,6 +172,73 @@
+         }
+     }
+ 
++    private void eliminarDoctor() {
++        String idEliminar = txtIngreso.getText();
++
++        if (!idEliminar.isEmpty()) {
++            String archivo = "Doctores.txt";
++            List<String> lineas = new ArrayList<>();
++
++            try (BufferedReader lector = new BufferedReader(new FileReader(archivo))) {
++                String linea;
++                boolean doctorEncontrado = false;
++
++                while ((linea = lector.readLine()) != null) {
++                    String[] partes = linea.split(", ");
++                    if (partes.length == 3) {
++                        String idDoctor = partes[1].trim();
++                        if (!idDoctor.equals(idEliminar)) {
++                            lineas.add(linea);
++                        } else {
++                            doctorEncontrado = true;
++                        }
++                    }
++                }
++
++                if (!doctorEncontrado) {
++                    JOptionPane.showMessageDialog(this, "No se encontró un doctor con ese ID.");
++                    return;
++                }
++            } catch (IOException e) {
++                e.printStackTrace();
++            }
++
++            try (BufferedWriter escritor = new BufferedWriter(new FileWriter(archivo))) {
++                for (String linea : lineas) {
++                    escritor.write(linea + "\n");
++                }
++            } catch (IOException e) {
++                e.printStackTrace();
++                JOptionPane.showMessageDialog(this, "Error al intentar eliminar al doctor.");
++                return;
++            }
++
++            JOptionPane.showMessageDialog(this, "Doctor eliminado con éxito.");
++        } else {
++            JOptionPane.showMessageDialog(this, "Por favor, ingrese un ID válido para eliminar.");
++        }
++    }
++    private void consultarDoctores() {
++        String archivo = "Doctores.txt";
++
++        try (BufferedReader lector = new BufferedReader(new FileReader(archivo))) {
++            StringBuilder datosDoctores = new StringBuilder();
++            String linea;
++
++            while ((linea = lector.readLine()) != null) {
++                datosDoctores.append(linea).append("\n");
++            }
++
++            if (datosDoctores.length() > 0) {
++                JOptionPane.showMessageDialog(this, "Datos de los Doctores:\n" + datosDoctores.toString());
++            } else {
++                JOptionPane.showMessageDialog(this, "No hay datos de doctores almacenados.");
++            }
++        } catch (IOException e) {
++            e.printStackTrace();
++            JOptionPane.showMessageDialog(this, "Error al intentar consultar los datos de los doctores.");
++        }
++    }
+ 
+ 
+     public static void main(String[] args){
+Index: src/VentanaPaciente.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>import javax.swing.*;\r\nimport java.awt.event.ActionEvent;\r\nimport java.awt.event.ActionListener;\r\nimport java.io.*;\r\nimport java.util.Random;\r\n\r\npublic class VentanaPaciente extends JFrame {\r\n    private JTextField txtNombre;\r\n    private JTextField txtTelefono;\r\n    private JTextField txtEdad;\r\n    private JLabel lblNombre;\r\n    private JLabel LblSexo;\r\n    private JComboBox cbxSexo;\r\n    private JLabel lblTelefono;\r\n    private JLabel lblEdad;\r\n    private JButton btnInsertar;\r\n    private JButton btnLimpiar;\r\n    private JPanel miPanel;\r\n    private JButton btnActualizar;\r\n    private JButton btnEliminar;\r\n    private JButton bntBuscar;\r\n    private JButton btnVerificar;\r\n    private JLabel lblID;\r\n    private JButton btnGenerar;\r\n    private JTextField txtID;\r\n    private JLabel txtBusqueda;\r\n    private JTextField txtIngreso;\r\n\r\n    public VentanaPaciente() {\r\n        btnLimpiar.addActionListener(new ActionListener() {\r\n            @Override\r\n            public void actionPerformed(ActionEvent e) {\r\n                limpiarCampos();\r\n            }\r\n        });\r\n        btnVerificar.addActionListener(new ActionListener() {\r\n            @Override\r\n            public void actionPerformed(ActionEvent e) {\r\n                VerificarCampos();\r\n            }\r\n        });\r\n        btnGenerar.addActionListener(new ActionListener() {\r\n            @Override\r\n            public void actionPerformed(ActionEvent e) {\r\n                InsertarIDEnTextPanel();\r\n            }\r\n        });\r\n        cbxSexo.addActionListener(new ActionListener() {\r\n            @Override\r\n            public void actionPerformed(ActionEvent e) {\r\n                String sexoSeleccionado = (String) cbxSexo.getSelectedItem();\r\n            }\r\n        });\r\n        btnInsertar.addActionListener(new ActionListener() {\r\n            @Override\r\n            public void actionPerformed(ActionEvent e) {\r\n                VerificarEInsertarEnArchivo();\r\n            }\r\n        });\r\n        bntBuscar.addActionListener(new ActionListener() {\r\n            @Override\r\n            public void actionPerformed(ActionEvent e) {\r\n                buscarPorID();\r\n            }\r\n        });\r\n    }\r\n    public class Paciente{\r\n        private String nombre;\r\n        private String id;\r\n        private int edad;\r\n        private String telefono;\r\n        private String sexo;\r\n\r\n        public Paciente(String nombre, String id, int edad, String telefono, String sexo){\r\n            this.nombre = nombre;\r\n            this.id = id;\r\n            this.edad = edad;\r\n            this.telefono = telefono;\r\n            this.sexo = sexo;\r\n        }\r\n    }\r\n\r\n    private int GenerarNumRandom(){\r\n        Random random = new Random();\r\n        return random.nextInt(9000)+1000;\r\n    }\r\n    private void InsertarIDEnTextPanel() {\r\n        int numran = GenerarNumRandom();\r\n        String idRan = \"P\" + numran;\r\n        txtID.setText(idRan);\r\n    }\r\n\r\n    private void VerificarEInsertarEnArchivo(){\r\n        String nombre = txtNombre.getText();\r\n        String idTxt = txtID.getText();\r\n        String TxTtelefono = txtTelefono.getText();\r\n        String edad = txtEdad.getText();\r\n        String sexo = (String)cbxSexo.getSelectedItem();\r\n        edad = String.valueOf(edad);\r\n\r\n        if(!nombre.isEmpty() && !idTxt.isEmpty() && !edad.isEmpty() && !TxTtelefono.isEmpty() && !sexo.isEmpty()){\r\n            String id = txtID.getText();\r\n            int edadnum = Integer.parseInt(edad);\r\n            Paciente newPac = new Paciente(nombre, String.valueOf(id), edadnum,TxTtelefono, sexo);\r\n            InsertarPaciente(newPac);\r\n            JOptionPane.showMessageDialog(this, \"Paciente Insertado en el Archivo:\\n \" + \"Nombre: \" + newPac.nombre +\"\\n\"+ \"ID: \" + newPac.id + \"\\n\" + \"Edad: \" + newPac.edad + \"\\n\" +\"Telefono: \"+ newPac.telefono + \"\\n\" +\"Sexo: \"+ newPac.sexo);\r\n        }\r\n    }\r\n    private void InsertarPaciente(Paciente newPac){\r\n        String Archivo = \"Pacientes.txt\";\r\n\r\n        try(BufferedWriter escritor = new BufferedWriter(new FileWriter(Archivo, true))){\r\n            escritor.write(newPac.nombre + \", \" + newPac.id + \", \" + newPac.edad +\", \"+ newPac.telefono+ \", \"+ newPac.sexo+\"\\n\");\r\n        } catch (IOException e){\r\n            e.printStackTrace();\r\n        }\r\n    }\r\n\r\n    private void buscarPorID(){\r\n        String idBusqueda = txtIngreso.getText();\r\n\r\n        if(!idBusqueda.isEmpty()){\r\n            Paciente finded = buscarPacientePorID(idBusqueda);\r\n            if(finded != null){\r\n                JOptionPane.showMessageDialog(this, \"Paciente encontrado:\\n\" +\r\n                        \"Nombre: \" + finded.nombre + \"\\n\" +\r\n                        \"ID: \" + finded.id + \"\\n\" +\r\n                        \"Edad: \" + finded.edad + \"\\n\"+\r\n                        \"Telefono: \" + finded.telefono + \"\\n\" +\r\n                        \"Sexo: \" + finded.sexo);\r\n            } else {\r\n                JOptionPane.showMessageDialog(this, \"No se encontró un Paciente con ese ID.\");\r\n            }\r\n        } else {\r\n            JOptionPane.showMessageDialog(this, \"Ingrese un ID para realizar la búsqueda.\");\r\n        }\r\n    }\r\n\r\n    private Paciente buscarPacientePorID(String id){\r\n        String Archivo = \"Pacientes.txt\";\r\n        try(BufferedReader lector = new BufferedReader(new FileReader(Archivo))){\r\n            String linea;\r\n            while((linea = lector.readLine()) != null){\r\n                String[] partes = linea.split(\", \");\r\n                if(partes.length == 5){\r\n                    String idPaciente = partes[1].trim();\r\n                    if(idPaciente.equals(id)){\r\n                        return new Paciente(partes[0], idPaciente,Integer.parseInt(partes[2]),partes[3], partes[4]);\r\n                    }\r\n                }\r\n            }\r\n\r\n        }catch(IOException e){\r\n            e.printStackTrace();\r\n        }\r\n        return null;\r\n    }\r\n\r\n    public void limpiarCampos(){\r\n        txtNombre.setText(\"\");\r\n        txtEdad.setText(\"\");\r\n        txtTelefono.setText(\"\");\r\n        txtID.setText(\"\");\r\n        cbxSexo.setSelectedItem(\"Ninguno\");\r\n        JOptionPane.showMessageDialog(this, \"Limpieza Exitosa\");\r\n    }\r\n    public void VerificarCampos(){\r\n        String nombre = txtNombre.getText();\r\n        String id = txtID.getText();\r\n        String edadTxt = txtEdad.getText();\r\n        String telefono = txtTelefono.getText();\r\n        String sexo = (String)cbxSexo.getSelectedItem();\r\n\r\n        if(!nombre.isEmpty() && !edadTxt.isEmpty() && !telefono.isEmpty()){\r\n\r\n            try{\r\n                int edadnum = Integer.parseInt(edadTxt);\r\n                Paciente newPac = new Paciente(nombre, id, edadnum, telefono, sexo);\r\n\r\n                JOptionPane.showMessageDialog(this, \"Paciente verificado: \" + newPac.nombre +\", \"+newPac.id +\", \"+ newPac.edad +\", \"+ newPac.telefono + \", \" + newPac.sexo);\r\n            } catch(NumberFormatException e){\r\n                JOptionPane.showMessageDialog(this, \"Ingrese una edad valida\");\r\n            }\r\n        }else{\r\n            JOptionPane.showMessageDialog(this, \"Por favor no deje campos en blanco y rellenelos con los datos necesarios\");\r\n        }\r\n    }\r\n\r\n\r\n    public static void main(String[] args){\r\n        VentanaPaciente pac = new VentanaPaciente();\r\n        pac.setContentPane(pac.miPanel);\r\n        pac.setSize(500,500);\r\n        pac.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);\r\n        pac.setVisible(true);\r\n    }\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/VentanaPaciente.java b/src/VentanaPaciente.java
+--- a/src/VentanaPaciente.java	(revision 8cf69ad15458754b16f490785e281963d8ad9545)
++++ b/src/VentanaPaciente.java	(date 1701537883357)
+@@ -2,6 +2,8 @@
+ import java.awt.event.ActionEvent;
+ import java.awt.event.ActionListener;
+ import java.io.*;
++import java.util.ArrayList;
++import java.util.List;
+ import java.util.Random;
+ 
+ public class VentanaPaciente extends JFrame {
+@@ -15,8 +17,8 @@
+     private JLabel lblEdad;
+     private JButton btnInsertar;
+     private JButton btnLimpiar;
+-    private JPanel miPanel;
+-    private JButton btnActualizar;
++    public JPanel MiPanel;
++
+     private JButton btnEliminar;
+     private JButton bntBuscar;
+     private JButton btnVerificar;
+@@ -25,6 +27,7 @@
+     private JTextField txtID;
+     private JLabel txtBusqueda;
+     private JTextField txtIngreso;
++    private JButton btnConsultar;
+ 
+     public VentanaPaciente() {
+         btnLimpiar.addActionListener(new ActionListener() {
+@@ -63,6 +66,18 @@
+                 buscarPorID();
+             }
+         });
++        btnEliminar.addActionListener(new ActionListener() {
++            @Override
++            public void actionPerformed(ActionEvent e) {
++                eliminarPaciente();
++            }
++        });
++        btnConsultar.addActionListener(new ActionListener() {
++            @Override
++            public void actionPerformed(ActionEvent e) {
++                consultarPacientes();
++            }
++        });
+     }
+     public class Paciente{
+         private String nombre;
+@@ -162,6 +177,7 @@
+         txtTelefono.setText("");
+         txtID.setText("");
+         cbxSexo.setSelectedItem("Ninguno");
++        txtIngreso.setText("");
+         JOptionPane.showMessageDialog(this, "Limpieza Exitosa");
+     }
+     public void VerificarCampos(){
+@@ -186,10 +202,77 @@
+         }
+     }
+ 
++    private void eliminarPaciente() {
++        String idEliminar = txtIngreso.getText();
++
++        if (!idEliminar.isEmpty()) {
++            String archivo = "Pacientes.txt";
++            List<String> lineas = new ArrayList<>();
+ 
++            try (BufferedReader lector = new BufferedReader(new FileReader(archivo))) {
++                String linea;
++                boolean pacienteEncontrado = false;
++
++                while ((linea = lector.readLine()) != null) {
++                    String[] partes = linea.split(", ");
++                    if (partes.length == 5) {
++                        String idPaciente = partes[1].trim();
++                        if (!idPaciente.equals(idEliminar)) {
++                            lineas.add(linea);
++                        } else {
++                            pacienteEncontrado = true;
++                        }
++                    }
++                }
++
++                if (!pacienteEncontrado) {
++                    JOptionPane.showMessageDialog(this, "No se encontró un paciente con ese ID.");
++                    return;
++                }
++            } catch (IOException e) {
++                e.printStackTrace();
++            }
++
++            try (BufferedWriter escritor = new BufferedWriter(new FileWriter(archivo))) {
++                for (String linea : lineas) {
++                    escritor.write(linea + "\n");
++                }
++            } catch (IOException e) {
++                e.printStackTrace();
++                JOptionPane.showMessageDialog(this, "Error al intentar eliminar al paciente.");
++                return;
++            }
++
++            JOptionPane.showMessageDialog(this, "Paciente eliminado con éxito.");
++        } else {
++            JOptionPane.showMessageDialog(this, "Por favor, ingrese un ID válido para eliminar.");
++        }
++    }
++
++    private void consultarPacientes() {
++        String archivo = "Pacientes.txt";
++
++        try (BufferedReader lector = new BufferedReader(new FileReader(archivo))) {
++            StringBuilder datosPacientes = new StringBuilder();
++            String linea;
++
++            while ((linea = lector.readLine()) != null) {
++                datosPacientes.append(linea).append("\n");
++            }
++
++            if (datosPacientes.length() > 0) {
++                JOptionPane.showMessageDialog(this, "Datos de los Pacientes:\n" + datosPacientes.toString());
++            } else {
++                JOptionPane.showMessageDialog(this, "No hay datos de pacientes almacenados.");
++            }
++        } catch (IOException e) {
++            e.printStackTrace();
++            JOptionPane.showMessageDialog(this, "Error al intentar consultar los datos de los pacientes.");
++        }
++    }
+     public static void main(String[] args){
+         VentanaPaciente pac = new VentanaPaciente();
+-        pac.setContentPane(pac.miPanel);
++        pac.setContentPane(pac.MiPanel);
+         pac.setSize(500,500);
+         pac.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+         pac.setVisible(true);
+Index: src/VentanaMenu.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/VentanaMenu.java b/src/VentanaMenu.java
+new file mode 100644
+--- /dev/null	(date 1701537883356)
++++ b/src/VentanaMenu.java	(date 1701537883356)
+@@ -0,0 +1,76 @@
++import javax.swing.*;
++import java.awt.event.ActionEvent;
++import java.awt.event.ActionListener;
++
++public class VentanaMenu extends JFrame{
++    public JPanel MiPanel;
++    private JButton btnDoctores;
++    private JButton btnPacientes;
++    private JButton btnCita;
++    private JButton btnRegreso;
++    
++    public VentanaMenu() {
++        btnDoctores.addActionListener(new ActionListener() {
++            @Override
++            public void actionPerformed(ActionEvent e) {
++                irDoctores();
++            }
++        });
++        btnPacientes.addActionListener(new ActionListener() {
++            @Override
++            public void actionPerformed(ActionEvent e) {
++                irPacientes();
++            }
++        });
++        btnRegreso.addActionListener(new ActionListener() {
++            @Override
++            public void actionPerformed(ActionEvent e) {
++                cerrarSesion();
++            }
++        });
++    }
++
++    private void irDoctores(){
++            // Cerrar la ventana actual
++            this.dispose();
++
++            // Crear e mostrar la ventana de registro
++            InsertarDoctor insertarDoctor = new InsertarDoctor();
++            JFrame frame = new JFrame("InsertarDoctor");
++            frame.setContentPane(insertarDoctor.MiPanel);
++            frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);  // Ajusta según tus necesidades
++            frame.pack();
++            frame.setVisible(true);
++    }
++
++    private void irPacientes(){
++        // Cerrar la ventana actual
++        this.dispose();
++
++        // Crear e mostrar la ventana de registro
++        VentanaPaciente ventanaPaciente = new VentanaPaciente();
++        JFrame frame = new JFrame("VentanaPaciente");
++        frame.setContentPane(ventanaPaciente.MiPanel);
++        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);  // Ajusta según tus necesidades
++        frame.pack();
++        frame.setVisible(true);
++    }
++
++    private void cerrarSesion(){
++        this.dispose();
++        VentanaLogin ventanaLogin = new VentanaLogin();
++        JFrame frame = new JFrame("VentanaLogin");
++        frame.setContentPane(ventanaLogin.MiPanel);
++        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);  // Ajusta según tus necesidades
++        frame.pack();
++        frame.setVisible(true);
++    }
++
++    public static void main(String[] args) {
++        VentanaMenu menu = new VentanaMenu();
++        menu.setContentPane(menu.MiPanel);
++        menu.setSize(500,500);
++        menu.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
++        menu.setVisible(true);
++    }
++}
+Index: src/VentanaDoctor.form
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<form xmlns=\"http://www.intellij.com/uidesigner/form/\" version=\"1\" bind-to-class=\"InsertarDoctor\">\r\n  <grid id=\"27dc6\" binding=\"MiPanel\" layout-manager=\"GridLayoutManager\" row-count=\"7\" column-count=\"4\" same-size-horizontally=\"false\" same-size-vertically=\"false\" hgap=\"-1\" vgap=\"-1\">\r\n    <margin top=\"0\" left=\"0\" bottom=\"0\" right=\"0\"/>\r\n    <constraints>\r\n      <xy x=\"20\" y=\"20\" width=\"500\" height=\"400\"/>\r\n    </constraints>\r\n    <properties/>\r\n    <border type=\"none\"/>\r\n    <children>\r\n      <component id=\"e8ff5\" class=\"javax.swing.JLabel\" binding=\"lblID\">\r\n        <constraints>\r\n          <grid row=\"0\" column=\"0\" row-span=\"1\" col-span=\"1\" vsize-policy=\"0\" hsize-policy=\"0\" anchor=\"8\" fill=\"0\" indent=\"0\" use-parent-layout=\"false\"/>\r\n        </constraints>\r\n        <properties>\r\n          <text value=\"ID:\"/>\r\n        </properties>\r\n      </component>\r\n      <component id=\"12803\" class=\"javax.swing.JTextField\" binding=\"txtID\">\r\n        <constraints>\r\n          <grid row=\"0\" column=\"1\" row-span=\"1\" col-span=\"2\" vsize-policy=\"0\" hsize-policy=\"6\" anchor=\"8\" fill=\"1\" indent=\"0\" use-parent-layout=\"false\">\r\n            <preferred-size width=\"150\" height=\"-1\"/>\r\n          </grid>\r\n        </constraints>\r\n        <properties>\r\n          <editable value=\"false\"/>\r\n        </properties>\r\n      </component>\r\n      <component id=\"d135d\" class=\"javax.swing.JLabel\" binding=\"lblNombre\">\r\n        <constraints>\r\n          <grid row=\"2\" column=\"0\" row-span=\"1\" col-span=\"1\" vsize-policy=\"0\" hsize-policy=\"0\" anchor=\"8\" fill=\"0\" indent=\"0\" use-parent-layout=\"false\"/>\r\n        </constraints>\r\n        <properties>\r\n          <text value=\"Nombre:\"/>\r\n        </properties>\r\n      </component>\r\n      <component id=\"bfeec\" class=\"javax.swing.JTextField\" binding=\"txtNombre\">\r\n        <constraints>\r\n          <grid row=\"2\" column=\"1\" row-span=\"1\" col-span=\"3\" vsize-policy=\"0\" hsize-policy=\"6\" anchor=\"8\" fill=\"1\" indent=\"0\" use-parent-layout=\"false\">\r\n            <preferred-size width=\"150\" height=\"-1\"/>\r\n          </grid>\r\n        </constraints>\r\n        <properties>\r\n          <text value=\"\"/>\r\n        </properties>\r\n      </component>\r\n      <component id=\"48e3\" class=\"javax.swing.JLabel\">\r\n        <constraints>\r\n          <grid row=\"4\" column=\"1\" row-span=\"2\" col-span=\"1\" vsize-policy=\"0\" hsize-policy=\"0\" anchor=\"8\" fill=\"0\" indent=\"0\" use-parent-layout=\"false\"/>\r\n        </constraints>\r\n        <properties>\r\n          <text value=\"\"/>\r\n        </properties>\r\n      </component>\r\n      <component id=\"914af\" class=\"javax.swing.JLabel\" binding=\"lblEspecialidad\">\r\n        <constraints>\r\n          <grid row=\"3\" column=\"0\" row-span=\"1\" col-span=\"1\" vsize-policy=\"0\" hsize-policy=\"0\" anchor=\"8\" fill=\"0\" indent=\"0\" use-parent-layout=\"false\"/>\r\n        </constraints>\r\n        <properties>\r\n          <text value=\"Especialidad:\"/>\r\n        </properties>\r\n      </component>\r\n      <component id=\"262ac\" class=\"javax.swing.JTextField\" binding=\"txtEspecialidad\">\r\n        <constraints>\r\n          <grid row=\"3\" column=\"1\" row-span=\"1\" col-span=\"3\" vsize-policy=\"0\" hsize-policy=\"6\" anchor=\"8\" fill=\"1\" indent=\"0\" use-parent-layout=\"false\">\r\n            <preferred-size width=\"150\" height=\"-1\"/>\r\n          </grid>\r\n        </constraints>\r\n        <properties/>\r\n      </component>\r\n      <component id=\"fe2db\" class=\"javax.swing.JButton\" binding=\"btnBuscar\">\r\n        <constraints>\r\n          <grid row=\"6\" column=\"2\" row-span=\"1\" col-span=\"2\" vsize-policy=\"0\" hsize-policy=\"3\" anchor=\"0\" fill=\"1\" indent=\"0\" use-parent-layout=\"false\"/>\r\n        </constraints>\r\n        <properties>\r\n          <text value=\"Buscar\"/>\r\n        </properties>\r\n      </component>\r\n      <component id=\"75f73\" class=\"javax.swing.JButton\" binding=\"btnEliminar\">\r\n        <constraints>\r\n          <grid row=\"5\" column=\"0\" row-span=\"1\" col-span=\"1\" vsize-policy=\"0\" hsize-policy=\"3\" anchor=\"0\" fill=\"1\" indent=\"0\" use-parent-layout=\"false\"/>\r\n        </constraints>\r\n        <properties>\r\n          <text value=\"Eliminar\"/>\r\n        </properties>\r\n      </component>\r\n      <component id=\"95601\" class=\"javax.swing.JButton\" binding=\"btnLimpiar\">\r\n        <constraints>\r\n          <grid row=\"6\" column=\"0\" row-span=\"1\" col-span=\"1\" vsize-policy=\"0\" hsize-policy=\"3\" anchor=\"0\" fill=\"1\" indent=\"0\" use-parent-layout=\"false\"/>\r\n        </constraints>\r\n        <properties>\r\n          <text value=\"Limpiar\"/>\r\n        </properties>\r\n      </component>\r\n      <component id=\"4427e\" class=\"javax.swing.JButton\" binding=\"btnGenerar\">\r\n        <constraints>\r\n          <grid row=\"0\" column=\"3\" row-span=\"1\" col-span=\"1\" vsize-policy=\"0\" hsize-policy=\"3\" anchor=\"0\" fill=\"1\" indent=\"0\" use-parent-layout=\"false\"/>\r\n        </constraints>\r\n        <properties>\r\n          <text value=\"Generar ID\"/>\r\n        </properties>\r\n      </component>\r\n      <component id=\"752c7\" class=\"javax.swing.JButton\" binding=\"btnVerificar\">\r\n        <constraints>\r\n          <grid row=\"4\" column=\"2\" row-span=\"1\" col-span=\"2\" vsize-policy=\"0\" hsize-policy=\"3\" anchor=\"0\" fill=\"1\" indent=\"0\" use-parent-layout=\"false\"/>\r\n        </constraints>\r\n        <properties>\r\n          <text value=\"Verificar\"/>\r\n        </properties>\r\n      </component>\r\n      <component id=\"641d7\" class=\"javax.swing.JButton\" binding=\"btnActualizar\">\r\n        <constraints>\r\n          <grid row=\"4\" column=\"0\" row-span=\"1\" col-span=\"1\" vsize-policy=\"0\" hsize-policy=\"3\" anchor=\"0\" fill=\"1\" indent=\"0\" use-parent-layout=\"false\"/>\r\n        </constraints>\r\n        <properties>\r\n          <text value=\"Actualizar\"/>\r\n        </properties>\r\n      </component>\r\n      <component id=\"3b75a\" class=\"javax.swing.JButton\" binding=\"btnInsertar\">\r\n        <constraints>\r\n          <grid row=\"5\" column=\"2\" row-span=\"1\" col-span=\"2\" vsize-policy=\"0\" hsize-policy=\"3\" anchor=\"0\" fill=\"1\" indent=\"0\" use-parent-layout=\"false\"/>\r\n        </constraints>\r\n        <properties>\r\n          <text value=\"Insertar\"/>\r\n        </properties>\r\n      </component>\r\n      <component id=\"380d6\" class=\"javax.swing.JLabel\" binding=\"lblIngresoID\">\r\n        <constraints>\r\n          <grid row=\"1\" column=\"0\" row-span=\"1\" col-span=\"1\" vsize-policy=\"0\" hsize-policy=\"0\" anchor=\"8\" fill=\"0\" indent=\"0\" use-parent-layout=\"false\"/>\r\n        </constraints>\r\n        <properties>\r\n          <text value=\"Ingrese un ID:\"/>\r\n        </properties>\r\n      </component>\r\n      <component id=\"5a69c\" class=\"javax.swing.JTextField\" binding=\"txtIngreso\">\r\n        <constraints>\r\n          <grid row=\"1\" column=\"1\" row-span=\"1\" col-span=\"3\" vsize-policy=\"0\" hsize-policy=\"6\" anchor=\"8\" fill=\"1\" indent=\"0\" use-parent-layout=\"false\">\r\n            <preferred-size width=\"150\" height=\"-1\"/>\r\n          </grid>\r\n        </constraints>\r\n        <properties/>\r\n      </component>\r\n    </children>\r\n  </grid>\r\n</form>\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/VentanaDoctor.form b/src/VentanaDoctor.form
+--- a/src/VentanaDoctor.form	(revision 8cf69ad15458754b16f490785e281963d8ad9545)
++++ b/src/VentanaDoctor.form	(date 1701537883354)
+@@ -108,14 +108,6 @@
+           <text value="Verificar"/>
+         </properties>
+       </component>
+-      <component id="641d7" class="javax.swing.JButton" binding="btnActualizar">
+-        <constraints>
+-          <grid row="4" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+-        </constraints>
+-        <properties>
+-          <text value="Actualizar"/>
+-        </properties>
+-      </component>
+       <component id="3b75a" class="javax.swing.JButton" binding="btnInsertar">
+         <constraints>
+           <grid row="5" column="2" row-span="1" col-span="2" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+@@ -139,6 +131,14 @@
+           </grid>
+         </constraints>
+         <properties/>
++      </component>
++      <component id="1e78c" class="javax.swing.JButton" binding="btnConsultar">
++        <constraints>
++          <grid row="4" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
++        </constraints>
++        <properties>
++          <text value="Consultar"/>
++        </properties>
+       </component>
+     </children>
+   </grid>
+Index: src/VentanaPaciente.form
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<form xmlns=\"http://www.intellij.com/uidesigner/form/\" version=\"1\" bind-to-class=\"VentanaPaciente\">\r\n  <grid id=\"27dc6\" binding=\"miPanel\" layout-manager=\"GridLayoutManager\" row-count=\"9\" column-count=\"3\" same-size-horizontally=\"false\" same-size-vertically=\"false\" hgap=\"-1\" vgap=\"-1\">\r\n    <margin top=\"0\" left=\"0\" bottom=\"0\" right=\"0\"/>\r\n    <constraints>\r\n      <xy x=\"20\" y=\"20\" width=\"500\" height=\"400\"/>\r\n    </constraints>\r\n    <properties/>\r\n    <border type=\"none\"/>\r\n    <children>\r\n      <component id=\"a3c19\" class=\"javax.swing.JLabel\" binding=\"lblNombre\">\r\n        <constraints>\r\n          <grid row=\"0\" column=\"0\" row-span=\"1\" col-span=\"1\" vsize-policy=\"0\" hsize-policy=\"0\" anchor=\"8\" fill=\"0\" indent=\"0\" use-parent-layout=\"false\"/>\r\n        </constraints>\r\n        <properties>\r\n          <text value=\"Nombre:\"/>\r\n        </properties>\r\n      </component>\r\n      <component id=\"dea0f\" class=\"javax.swing.JLabel\" binding=\"LblSexo\">\r\n        <constraints>\r\n          <grid row=\"2\" column=\"0\" row-span=\"1\" col-span=\"1\" vsize-policy=\"0\" hsize-policy=\"0\" anchor=\"8\" fill=\"0\" indent=\"0\" use-parent-layout=\"false\"/>\r\n        </constraints>\r\n        <properties>\r\n          <text value=\"Sexo:\"/>\r\n        </properties>\r\n      </component>\r\n      <component id=\"dd42a\" class=\"javax.swing.JLabel\" binding=\"lblTelefono\">\r\n        <constraints>\r\n          <grid row=\"3\" column=\"0\" row-span=\"1\" col-span=\"1\" vsize-policy=\"0\" hsize-policy=\"0\" anchor=\"8\" fill=\"0\" indent=\"0\" use-parent-layout=\"false\"/>\r\n        </constraints>\r\n        <properties>\r\n          <text value=\"Telefono:\"/>\r\n        </properties>\r\n      </component>\r\n      <component id=\"c8b75\" class=\"javax.swing.JLabel\" binding=\"lblEdad\">\r\n        <constraints>\r\n          <grid row=\"4\" column=\"0\" row-span=\"1\" col-span=\"1\" vsize-policy=\"0\" hsize-policy=\"0\" anchor=\"8\" fill=\"0\" indent=\"0\" use-parent-layout=\"false\"/>\r\n        </constraints>\r\n        <properties>\r\n          <text value=\"Edad:\"/>\r\n        </properties>\r\n      </component>\r\n      <component id=\"b3138\" class=\"javax.swing.JTextField\" binding=\"txtTelefono\">\r\n        <constraints>\r\n          <grid row=\"3\" column=\"1\" row-span=\"1\" col-span=\"2\" vsize-policy=\"0\" hsize-policy=\"6\" anchor=\"8\" fill=\"1\" indent=\"0\" use-parent-layout=\"false\">\r\n            <preferred-size width=\"150\" height=\"-1\"/>\r\n          </grid>\r\n        </constraints>\r\n        <properties>\r\n          <text value=\"\"/>\r\n        </properties>\r\n      </component>\r\n      <component id=\"57a1c\" class=\"javax.swing.JTextField\" binding=\"txtEdad\">\r\n        <constraints>\r\n          <grid row=\"4\" column=\"1\" row-span=\"1\" col-span=\"2\" vsize-policy=\"0\" hsize-policy=\"6\" anchor=\"8\" fill=\"1\" indent=\"0\" use-parent-layout=\"false\">\r\n            <preferred-size width=\"150\" height=\"-1\"/>\r\n          </grid>\r\n        </constraints>\r\n        <properties/>\r\n      </component>\r\n      <component id=\"e25b5\" class=\"javax.swing.JComboBox\" binding=\"cbxSexo\">\r\n        <constraints>\r\n          <grid row=\"2\" column=\"1\" row-span=\"1\" col-span=\"2\" vsize-policy=\"0\" hsize-policy=\"2\" anchor=\"8\" fill=\"1\" indent=\"0\" use-parent-layout=\"false\"/>\r\n        </constraints>\r\n        <properties>\r\n          <model>\r\n            <item value=\"Ninguno\"/>\r\n            <item value=\"Masculino\"/>\r\n            <item value=\"Femenino\"/>\r\n          </model>\r\n        </properties>\r\n      </component>\r\n      <component id=\"21113\" class=\"javax.swing.JButton\" binding=\"btnInsertar\">\r\n        <constraints>\r\n          <grid row=\"6\" column=\"1\" row-span=\"1\" col-span=\"2\" vsize-policy=\"0\" hsize-policy=\"3\" anchor=\"0\" fill=\"1\" indent=\"0\" use-parent-layout=\"false\"/>\r\n        </constraints>\r\n        <properties>\r\n          <text value=\"Insertar\"/>\r\n        </properties>\r\n      </component>\r\n      <component id=\"d4c98\" class=\"javax.swing.JTextField\" binding=\"txtNombre\">\r\n        <constraints>\r\n          <grid row=\"0\" column=\"1\" row-span=\"1\" col-span=\"2\" vsize-policy=\"0\" hsize-policy=\"6\" anchor=\"8\" fill=\"1\" indent=\"0\" use-parent-layout=\"false\">\r\n            <preferred-size width=\"150\" height=\"-1\"/>\r\n          </grid>\r\n        </constraints>\r\n        <properties/>\r\n      </component>\r\n      <component id=\"c0523\" class=\"javax.swing.JButton\" binding=\"btnActualizar\">\r\n        <constraints>\r\n          <grid row=\"6\" column=\"0\" row-span=\"1\" col-span=\"1\" vsize-policy=\"0\" hsize-policy=\"3\" anchor=\"0\" fill=\"1\" indent=\"0\" use-parent-layout=\"false\"/>\r\n        </constraints>\r\n        <properties>\r\n          <text value=\"Actualizar\"/>\r\n        </properties>\r\n      </component>\r\n      <component id=\"badef\" class=\"javax.swing.JButton\" binding=\"btnEliminar\">\r\n        <constraints>\r\n          <grid row=\"7\" column=\"0\" row-span=\"1\" col-span=\"1\" vsize-policy=\"0\" hsize-policy=\"3\" anchor=\"0\" fill=\"1\" indent=\"0\" use-parent-layout=\"false\"/>\r\n        </constraints>\r\n        <properties>\r\n          <text value=\"Eliminar\"/>\r\n        </properties>\r\n      </component>\r\n      <component id=\"3f27e\" class=\"javax.swing.JButton\" binding=\"btnLimpiar\">\r\n        <constraints>\r\n          <grid row=\"8\" column=\"0\" row-span=\"1\" col-span=\"1\" vsize-policy=\"0\" hsize-policy=\"3\" anchor=\"0\" fill=\"1\" indent=\"0\" use-parent-layout=\"false\"/>\r\n        </constraints>\r\n        <properties>\r\n          <text value=\"Limpiar\"/>\r\n        </properties>\r\n      </component>\r\n      <component id=\"61624\" class=\"javax.swing.JButton\" binding=\"btnVerificar\">\r\n        <constraints>\r\n          <grid row=\"7\" column=\"1\" row-span=\"1\" col-span=\"2\" vsize-policy=\"0\" hsize-policy=\"3\" anchor=\"0\" fill=\"1\" indent=\"0\" use-parent-layout=\"false\"/>\r\n        </constraints>\r\n        <properties>\r\n          <text value=\"Verificar\"/>\r\n        </properties>\r\n      </component>\r\n      <component id=\"23da8\" class=\"javax.swing.JLabel\" binding=\"lblID\">\r\n        <constraints>\r\n          <grid row=\"1\" column=\"0\" row-span=\"1\" col-span=\"1\" vsize-policy=\"0\" hsize-policy=\"0\" anchor=\"8\" fill=\"0\" indent=\"0\" use-parent-layout=\"false\"/>\r\n        </constraints>\r\n        <properties>\r\n          <text value=\"ID: \"/>\r\n        </properties>\r\n      </component>\r\n      <component id=\"42236\" class=\"javax.swing.JButton\" binding=\"btnGenerar\">\r\n        <constraints>\r\n          <grid row=\"1\" column=\"2\" row-span=\"1\" col-span=\"1\" vsize-policy=\"0\" hsize-policy=\"3\" anchor=\"0\" fill=\"1\" indent=\"0\" use-parent-layout=\"false\"/>\r\n        </constraints>\r\n        <properties>\r\n          <text value=\"Generar ID\"/>\r\n        </properties>\r\n      </component>\r\n      <component id=\"7f91\" class=\"javax.swing.JButton\" binding=\"bntBuscar\">\r\n        <constraints>\r\n          <grid row=\"8\" column=\"1\" row-span=\"1\" col-span=\"2\" vsize-policy=\"0\" hsize-policy=\"3\" anchor=\"0\" fill=\"1\" indent=\"0\" use-parent-layout=\"false\"/>\r\n        </constraints>\r\n        <properties>\r\n          <text value=\"Buscar\"/>\r\n        </properties>\r\n      </component>\r\n      <component id=\"75f09\" class=\"javax.swing.JTextField\" binding=\"txtID\">\r\n        <constraints>\r\n          <grid row=\"1\" column=\"1\" row-span=\"1\" col-span=\"1\" vsize-policy=\"0\" hsize-policy=\"6\" anchor=\"8\" fill=\"1\" indent=\"0\" use-parent-layout=\"false\">\r\n            <preferred-size width=\"150\" height=\"-1\"/>\r\n          </grid>\r\n        </constraints>\r\n        <properties>\r\n          <editable value=\"false\"/>\r\n        </properties>\r\n      </component>\r\n      <component id=\"b06a3\" class=\"javax.swing.JLabel\" binding=\"txtBusqueda\">\r\n        <constraints>\r\n          <grid row=\"5\" column=\"0\" row-span=\"1\" col-span=\"1\" vsize-policy=\"0\" hsize-policy=\"0\" anchor=\"8\" fill=\"0\" indent=\"0\" use-parent-layout=\"false\"/>\r\n        </constraints>\r\n        <properties>\r\n          <text value=\"Buscar por ID:\"/>\r\n        </properties>\r\n      </component>\r\n      <component id=\"84cea\" class=\"javax.swing.JTextField\" binding=\"txtIngreso\">\r\n        <constraints>\r\n          <grid row=\"5\" column=\"1\" row-span=\"1\" col-span=\"2\" vsize-policy=\"0\" hsize-policy=\"6\" anchor=\"8\" fill=\"1\" indent=\"0\" use-parent-layout=\"false\">\r\n            <preferred-size width=\"150\" height=\"-1\"/>\r\n          </grid>\r\n        </constraints>\r\n        <properties>\r\n          <text value=\"\"/>\r\n        </properties>\r\n      </component>\r\n    </children>\r\n  </grid>\r\n</form>\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/VentanaPaciente.form b/src/VentanaPaciente.form
+--- a/src/VentanaPaciente.form	(revision 8cf69ad15458754b16f490785e281963d8ad9545)
++++ b/src/VentanaPaciente.form	(date 1701537883356)
+@@ -1,6 +1,6 @@
+ <?xml version="1.0" encoding="UTF-8"?>
+ <form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="VentanaPaciente">
+-  <grid id="27dc6" binding="miPanel" layout-manager="GridLayoutManager" row-count="9" column-count="3" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
++  <grid id="27dc6" binding="MiPanel" layout-manager="GridLayoutManager" row-count="9" column-count="3" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+     <margin top="0" left="0" bottom="0" right="0"/>
+     <constraints>
+       <xy x="20" y="20" width="500" height="400"/>
+@@ -85,14 +85,6 @@
+           </grid>
+         </constraints>
+         <properties/>
+-      </component>
+-      <component id="c0523" class="javax.swing.JButton" binding="btnActualizar">
+-        <constraints>
+-          <grid row="6" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+-        </constraints>
+-        <properties>
+-          <text value="Actualizar"/>
+-        </properties>
+       </component>
+       <component id="badef" class="javax.swing.JButton" binding="btnEliminar">
+         <constraints>
+@@ -168,6 +160,14 @@
+         </constraints>
+         <properties>
+           <text value=""/>
++        </properties>
++      </component>
++      <component id="538ef" class="javax.swing.JButton" binding="btnConsultar">
++        <constraints>
++          <grid row="6" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
++        </constraints>
++        <properties>
++          <text value="Consultar"/>
+         </properties>
+       </component>
+     </children>
+Index: Pacientes.txt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>Jorge, P6001, 22, 1234567890, Masculino\r\nAlicia, P9945, 22, 1234567890, Femenino\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Pacientes.txt b/Pacientes.txt
+--- a/Pacientes.txt	(revision 8cf69ad15458754b16f490785e281963d8ad9545)
++++ b/Pacientes.txt	(date 1701537883352)
+@@ -1,2 +1,3 @@
+ Jorge, P6001, 22, 1234567890, Masculino
+ Alicia, P9945, 22, 1234567890, Femenino
++Carlos, P3739, 23, 1234567890, Masculino
+Index: Doctores.txt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>Jose, D3621, Neurologia\r\nJorge, D3467, Cardiologia\r\nHugo, D6901, Psicologia\r\nKaren, D5469, Patologia\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Doctores.txt b/Doctores.txt
+--- a/Doctores.txt	(revision 8cf69ad15458754b16f490785e281963d8ad9545)
++++ b/Doctores.txt	(date 1701537883352)
+@@ -1,4 +1,3 @@
+ Jose, D3621, Neurologia
+ Jorge, D3467, Cardiologia
+ Hugo, D6901, Psicologia
+-Karen, D5469, Patologia
+Index: src/VentanaRegistro.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/VentanaRegistro.java b/src/VentanaRegistro.java
+new file mode 100644
+--- /dev/null	(date 1701537883358)
++++ b/src/VentanaRegistro.java	(date 1701537883358)
+@@ -0,0 +1,96 @@
++import javax.swing.*;
++import java.awt.event.ActionEvent;
++import java.awt.event.ActionListener;
++import java.io.BufferedWriter;
++import java.io.FileWriter;
++import java.io.IOException;
++
++public class VentanaRegistro extends JFrame{
++    private JTextField txtEdad;
++    private JTextField txtEmail;
++    private JTextField txtNombre;
++    private JComboBox cbxTipo;
++    private JButton btnCrear;
++    private JPasswordField pswContraseña;
++    private JPasswordField pswConfirmar;
++    public JPanel MiPanel;
++    private JButton btnRegresar;
++
++    public VentanaRegistro() {
++        btnCrear.addActionListener(new ActionListener() {
++            @Override
++            public void actionPerformed(ActionEvent e) {
++                guardarDatos();
++            }
++        });
++        btnRegresar.addActionListener(new ActionListener() {
++            @Override
++            public void actionPerformed(ActionEvent e) {
++                regresarAVentanaLogin();
++            }
++        });
++    }
++
++    private void guardarDatos() {
++        String nombre = txtNombre.getText();
++        String email = txtEmail.getText();
++        String edadStr = txtEdad.getText();
++        String tipoUsuario = (String) cbxTipo.getSelectedItem(); // Obtener el tipo de usuario seleccionado
++        String contraseña = new String(pswContraseña.getPassword());
++
++        // Verificar si las contraseñas coinciden antes de guardar
++        String confirmarContraseña = new String(pswConfirmar.getPassword());
++        if (!contraseña.equals(confirmarContraseña)) {
++            JOptionPane.showMessageDialog(this, "Las contraseñas no coinciden", "Error", JOptionPane.ERROR_MESSAGE);
++            return;
++        }
++
++        // Verificar si la edad es un número
++        int edad;
++        try {
++            edad = Integer.parseInt(edadStr);
++        } catch (NumberFormatException ex) {
++            JOptionPane.showMessageDialog(this, "Ingrese una edad válida", "Error", JOptionPane.ERROR_MESSAGE);
++            return;
++        }
++
++        // Guardar datos en el archivo Registro.txt
++        try (BufferedWriter writer = new BufferedWriter(new FileWriter("Registro.txt", true))) {
++            // Agregar datos al archivo
++            writer.write("Nombre:" + nombre + "\n");
++            writer.write("Email:" + email + "\n");
++            writer.write("Edad:" + edad + "\n");
++            writer.write("Tipo de Usuario:" + tipoUsuario + "\n");
++            writer.write("Contraseña:" + contraseña + "\n");
++            writer.write("\n");  // Separador entre registros
++
++            // Mensaje de éxito
++            JOptionPane.showMessageDialog(this, "Datos guardados con éxito", "Éxito", JOptionPane.INFORMATION_MESSAGE);
++        } catch (IOException ex) {
++            // Manejar errores de escritura de archivos
++            ex.printStackTrace();
++            JOptionPane.showMessageDialog(this, "Error al guardar datos", "Error", JOptionPane.ERROR_MESSAGE);
++        }
++    }
++
++    private void regresarAVentanaLogin() {
++        // Cerrar la ventana actual
++        this.dispose();
++
++        // Crear e mostrar la ventana de login
++        VentanaLogin ventanaLogin = new VentanaLogin();
++        JFrame frame = new JFrame("VentanaLogin");
++        frame.setContentPane(ventanaLogin.MiPanel);
++        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);  // Ajusta según tus necesidades
++        frame.pack();
++        frame.setVisible(true);
++    }
++
++    public static void main(String[] args) {
++        VentanaRegistro registro = new VentanaRegistro();
++        registro.setContentPane(registro.MiPanel);
++        registro.setSize(500,500);
++        registro.setDefaultCloseOperation(EXIT_ON_CLOSE);
++        registro.setVisible(true);
++    }
++}
+Index: src/VentanaRegistro.form
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/VentanaRegistro.form b/src/VentanaRegistro.form
+new file mode 100644
+--- /dev/null	(date 1701537883358)
++++ b/src/VentanaRegistro.form	(date 1701537883358)
+@@ -0,0 +1,136 @@
++<?xml version="1.0" encoding="UTF-8"?>
++<form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="VentanaRegistro">
++  <grid id="27dc6" binding="MiPanel" layout-manager="GridLayoutManager" row-count="6" column-count="4" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
++    <margin top="0" left="0" bottom="0" right="0"/>
++    <constraints>
++      <xy x="20" y="20" width="536" height="400"/>
++    </constraints>
++    <properties/>
++    <border type="none"/>
++    <children>
++      <component id="7db66" class="javax.swing.JLabel">
++        <constraints>
++          <grid row="4" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
++        </constraints>
++        <properties>
++          <text value="Edad:"/>
++        </properties>
++      </component>
++      <component id="cb23a" class="javax.swing.JLabel">
++        <constraints>
++          <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
++        </constraints>
++        <properties>
++          <text value="Confirmar contraseña:"/>
++        </properties>
++      </component>
++      <component id="2e80d" class="javax.swing.JLabel">
++        <constraints>
++          <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
++        </constraints>
++        <properties>
++          <text value="Contraseña:"/>
++        </properties>
++      </component>
++      <component id="e4539" class="javax.swing.JLabel">
++        <constraints>
++          <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
++        </constraints>
++        <properties>
++          <text value="E-mail:"/>
++        </properties>
++      </component>
++      <component id="cbff3" class="javax.swing.JLabel">
++        <constraints>
++          <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
++        </constraints>
++        <properties>
++          <text value="Nombre:"/>
++        </properties>
++      </component>
++      <component id="2f30b" class="javax.swing.JLabel">
++        <constraints>
++          <grid row="4" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
++        </constraints>
++        <properties>
++          <text value="Doctor o Paciente"/>
++        </properties>
++      </component>
++      <component id="330db" class="javax.swing.JTextField" binding="txtEdad">
++        <constraints>
++          <grid row="4" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
++            <preferred-size width="150" height="-1"/>
++          </grid>
++        </constraints>
++        <properties/>
++      </component>
++      <component id="2faff" class="javax.swing.JTextField" binding="txtEmail">
++        <constraints>
++          <grid row="1" column="1" row-span="1" col-span="3" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
++            <preferred-size width="150" height="-1"/>
++          </grid>
++        </constraints>
++        <properties>
++          <text value=""/>
++        </properties>
++      </component>
++      <component id="ca2eb" class="javax.swing.JTextField" binding="txtNombre">
++        <constraints>
++          <grid row="0" column="1" row-span="1" col-span="3" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
++            <preferred-size width="150" height="-1"/>
++          </grid>
++        </constraints>
++        <properties>
++          <text value=""/>
++        </properties>
++      </component>
++      <component id="9b357" class="javax.swing.JComboBox" binding="cbxTipo">
++        <constraints>
++          <grid row="4" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
++        </constraints>
++        <properties>
++          <model>
++            <item value="Paciente"/>
++            <item value="Doctor"/>
++          </model>
++        </properties>
++      </component>
++      <component id="fe456" class="javax.swing.JButton" binding="btnCrear">
++        <constraints>
++          <grid row="5" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
++        </constraints>
++        <properties>
++          <text value="Crear"/>
++        </properties>
++      </component>
++      <component id="8da45" class="javax.swing.JPasswordField" binding="pswContraseña">
++        <constraints>
++          <grid row="2" column="1" row-span="1" col-span="3" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
++            <preferred-size width="150" height="-1"/>
++          </grid>
++        </constraints>
++        <properties>
++          <text value=""/>
++        </properties>
++      </component>
++      <component id="7626c" class="javax.swing.JPasswordField" binding="pswConfirmar">
++        <constraints>
++          <grid row="3" column="1" row-span="1" col-span="3" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
++            <preferred-size width="150" height="-1"/>
++          </grid>
++        </constraints>
++        <properties>
++          <text value=""/>
++        </properties>
++      </component>
++      <component id="b9bc7" class="javax.swing.JButton" binding="btnRegresar">
++        <constraints>
++          <grid row="5" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
++        </constraints>
++        <properties>
++          <text value="Regresar"/>
++        </properties>
++      </component>
++    </children>
++  </grid>
++</form>
+Index: .idea/workspace.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<project version=\"4\">\r\n  <component name=\"AutoImportSettings\">\r\n    <option name=\"autoReloadType\" value=\"SELECTIVE\" />\r\n  </component>\r\n  <component name=\"ChangeListManager\">\r\n    <list default=\"true\" id=\"4626b4c4-72a3-43a5-93e8-c3876e5a2187\" name=\"Changes\" comment=\"AVANCE 3 DE EVIDENCIA FINAL\" />\r\n    <option name=\"SHOW_DIALOG\" value=\"false\" />\r\n    <option name=\"HIGHLIGHT_CONFLICTS\" value=\"true\" />\r\n    <option name=\"HIGHLIGHT_NON_ACTIVE_CHANGELIST\" value=\"false\" />\r\n    <option name=\"LAST_RESOLUTION\" value=\"IGNORE\" />\r\n  </component>\r\n  <component name=\"FileTemplateManagerImpl\">\r\n    <option name=\"RECENT_TEMPLATES\">\r\n      <list>\r\n        <option value=\"Class\" />\r\n      </list>\r\n    </option>\r\n  </component>\r\n  <component name=\"Git.Merge.Settings\">\r\n    <option name=\"BRANCH\" value=\"master\" />\r\n  </component>\r\n  <component name=\"Git.Rebase.Settings\">\r\n    <option name=\"NEW_BASE\" value=\"origin/master\" />\r\n  </component>\r\n  <component name=\"Git.Settings\">\r\n    <option name=\"RECENT_GIT_ROOT_PATH\" value=\"$PROJECT_DIR$\" />\r\n  </component>\r\n  <component name=\"ProjectId\" id=\"2YdD2xy62zAPddfNHHWILoa3NKl\" />\r\n  <component name=\"ProjectLevelVcsManager\" settingsEditedManually=\"true\" />\r\n  <component name=\"ProjectViewState\">\r\n    <option name=\"hideEmptyMiddlePackages\" value=\"true\" />\r\n    <option name=\"showLibraryContents\" value=\"true\" />\r\n  </component>\r\n  <component name=\"PropertiesComponent\">{\r\n  &quot;keyToString&quot;: {\r\n    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,\r\n    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,\r\n    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,\r\n    &quot;UI_DESIGNER_EDITOR_MODE.UIDesignerToolWindowManager.SHOW&quot;: &quot;true&quot;,\r\n    &quot;git-widget-placeholder&quot;: &quot;master&quot;,\r\n    &quot;onboarding.tips.debug.path&quot;: &quot;C:/Computacion en java/Evidencia3/src/Main.java&quot;,\r\n    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,\r\n    &quot;project.structure.proportion&quot;: &quot;0.0&quot;,\r\n    &quot;project.structure.side.proportion&quot;: &quot;0.0&quot;\r\n  }\r\n}</component>\r\n  <component name=\"SpellCheckerSettings\" RuntimeDictionaries=\"0\" Folders=\"0\" CustomDictionaries=\"0\" DefaultDictionary=\"application-level\" UseSingleDictionary=\"true\" transferred=\"true\" />\r\n  <component name=\"TaskManager\">\r\n    <task active=\"true\" id=\"Default\" summary=\"Default task\">\r\n      <changelist id=\"4626b4c4-72a3-43a5-93e8-c3876e5a2187\" name=\"Changes\" comment=\"\" />\r\n      <created>1700846361266</created>\r\n      <option name=\"number\" value=\"Default\" />\r\n      <option name=\"presentableId\" value=\"Default\" />\r\n      <updated>1700846361266</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00001\" summary=\"AVANCE 2 DE EVIDENCIA FINAL\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1700883699845</created>\r\n      <option name=\"number\" value=\"00001\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00001\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1700883699845</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00002\" summary=\"AVANCE 2 DE EVIDENCIA FINAL\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1700883714586</created>\r\n      <option name=\"number\" value=\"00002\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00002\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1700883714586</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00003\" summary=\"AVANCE 2 DE EVIDENCIA FINAL\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1700883776474</created>\r\n      <option name=\"number\" value=\"00003\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00003\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1700883776474</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00004\" summary=\"AVANCE 2 DE EVIDENCIA FINAL\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1700883912327</created>\r\n      <option name=\"number\" value=\"00004\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00004\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1700883912327</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00005\" summary=\"AVANCE 2 DE EVIDENCIA FINAL\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1700884132114</created>\r\n      <option name=\"number\" value=\"00005\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00005\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1700884132115</updated>\r\n    </task>\r\n    <option name=\"localTasksCounter\" value=\"6\" />\r\n    <servers />\r\n  </component>\r\n  <component name=\"Vcs.Log.Tabs.Properties\">\r\n    <option name=\"TAB_STATES\">\r\n      <map>\r\n        <entry key=\"MAIN\">\r\n          <value>\r\n            <State />\r\n          </value>\r\n        </entry>\r\n      </map>\r\n    </option>\r\n  </component>\r\n  <component name=\"VcsManagerConfiguration\">\r\n    <MESSAGE value=\"AVANCE 2 DE EVIDENCIA FINAL\" />\r\n    <option name=\"LAST_COMMIT_MESSAGE\" value=\"AVANCE 2 DE EVIDENCIA FINAL\" />\r\n  </component>\r\n  <component name=\"XDebuggerManager\">\r\n    <breakpoint-manager>\r\n      <breakpoints>\r\n        <line-breakpoint enabled=\"true\" type=\"java-line\">\r\n          <url>file://$PROJECT_DIR$/src/InsertarDoctor.java</url>\r\n          <line>44</line>\r\n          <option name=\"timeStamp\" value=\"7\" />\r\n        </line-breakpoint>\r\n        <line-breakpoint enabled=\"true\" type=\"java-line\">\r\n          <url>file://$PROJECT_DIR$/src/InsertarDoctor.java</url>\r\n          <line>26</line>\r\n          <option name=\"timeStamp\" value=\"8\" />\r\n        </line-breakpoint>\r\n        <line-breakpoint enabled=\"true\" type=\"java-line\">\r\n          <url>file://$PROJECT_DIR$/src/InsertarDoctor.java</url>\r\n          <line>101</line>\r\n          <option name=\"timeStamp\" value=\"13\" />\r\n        </line-breakpoint>\r\n        <line-breakpoint enabled=\"true\" type=\"java-method\">\r\n          <url>file://$PROJECT_DIR$/src/InsertarDoctor.java</url>\r\n          <line>123</line>\r\n          <properties class=\"InsertarDoctor\" method=\"buscarDoctorPorID\">\r\n            <option name=\"EMULATED\" value=\"true\" />\r\n            <option name=\"WATCH_EXIT\" value=\"false\" />\r\n          </properties>\r\n          <option name=\"timeStamp\" value=\"12\" />\r\n        </line-breakpoint>\r\n      </breakpoints>\r\n    </breakpoint-manager>\r\n  </component>\r\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/workspace.xml b/.idea/workspace.xml
+--- a/.idea/workspace.xml	(revision 8cf69ad15458754b16f490785e281963d8ad9545)
++++ b/.idea/workspace.xml	(date 1701537883350)
+@@ -4,7 +4,21 @@
+     <option name="autoReloadType" value="SELECTIVE" />
+   </component>
+   <component name="ChangeListManager">
+-    <list default="true" id="4626b4c4-72a3-43a5-93e8-c3876e5a2187" name="Changes" comment="AVANCE 3 DE EVIDENCIA FINAL" />
++    <list default="true" id="4626b4c4-72a3-43a5-93e8-c3876e5a2187" name="Changes" comment="AVANCE 3&#10; DE EVIDENCIA FINAL">
++      <change afterPath="$PROJECT_DIR$/src/VentanaLogin.form" afterDir="false" />
++      <change afterPath="$PROJECT_DIR$/src/VentanaLogin.java" afterDir="false" />
++      <change afterPath="$PROJECT_DIR$/src/VentanaMenu.form" afterDir="false" />
++      <change afterPath="$PROJECT_DIR$/src/VentanaMenu.java" afterDir="false" />
++      <change afterPath="$PROJECT_DIR$/src/VentanaRegistro.form" afterDir="false" />
++      <change afterPath="$PROJECT_DIR$/src/VentanaRegistro.java" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/Doctores.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Doctores.txt" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/Pacientes.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Pacientes.txt" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/src/InsertarDoctor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/InsertarDoctor.java" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/src/VentanaDoctor.form" beforeDir="false" afterPath="$PROJECT_DIR$/src/VentanaDoctor.form" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/src/VentanaPaciente.form" beforeDir="false" afterPath="$PROJECT_DIR$/src/VentanaPaciente.form" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/src/VentanaPaciente.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/VentanaPaciente.java" afterDir="false" />
++    </list>
+     <option name="SHOW_DIALOG" value="false" />
+     <option name="HIGHLIGHT_CONFLICTS" value="true" />
+     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+@@ -94,7 +108,15 @@
+       <option name="project" value="LOCAL" />
+       <updated>1700884132115</updated>
+     </task>
+-    <option name="localTasksCounter" value="6" />
++    <task id="LOCAL-00006" summary="AVANCE 3&#10; DE EVIDENCIA FINAL">
++      <option name="closed" value="true" />
++      <created>1701370390533</created>
++      <option name="number" value="00006" />
++      <option name="presentableId" value="LOCAL-00006" />
++      <option name="project" value="LOCAL" />
++      <updated>1701370390533</updated>
++    </task>
++    <option name="localTasksCounter" value="7" />
+     <servers />
+   </component>
+   <component name="Vcs.Log.Tabs.Properties">
+@@ -110,34 +132,45 @@
+   </component>
+   <component name="VcsManagerConfiguration">
+     <MESSAGE value="AVANCE 2 DE EVIDENCIA FINAL" />
+-    <option name="LAST_COMMIT_MESSAGE" value="AVANCE 2 DE EVIDENCIA FINAL" />
++    <MESSAGE value="AVANCE 3 DE EVIDENCIA FINAL" />
++    <MESSAGE value="AVANCE 3&#10; DE EVIDENCIA FINAL" />
++    <option name="LAST_COMMIT_MESSAGE" value="AVANCE 3&#10; DE EVIDENCIA FINAL" />
+   </component>
+   <component name="XDebuggerManager">
+     <breakpoint-manager>
+       <breakpoints>
+         <line-breakpoint enabled="true" type="java-line">
+           <url>file://$PROJECT_DIR$/src/InsertarDoctor.java</url>
+-          <line>44</line>
++          <line>45</line>
+           <option name="timeStamp" value="7" />
+         </line-breakpoint>
+         <line-breakpoint enabled="true" type="java-line">
+           <url>file://$PROJECT_DIR$/src/InsertarDoctor.java</url>
+-          <line>26</line>
++          <line>27</line>
+           <option name="timeStamp" value="8" />
+         </line-breakpoint>
+         <line-breakpoint enabled="true" type="java-line">
+           <url>file://$PROJECT_DIR$/src/InsertarDoctor.java</url>
+-          <line>101</line>
++          <line>114</line>
+           <option name="timeStamp" value="13" />
+         </line-breakpoint>
+         <line-breakpoint enabled="true" type="java-method">
+           <url>file://$PROJECT_DIR$/src/InsertarDoctor.java</url>
+-          <line>123</line>
++          <line>136</line>
+           <properties class="InsertarDoctor" method="buscarDoctorPorID">
+             <option name="EMULATED" value="true" />
+             <option name="WATCH_EXIT" value="false" />
+           </properties>
+           <option name="timeStamp" value="12" />
++        </line-breakpoint>
++        <line-breakpoint enabled="true" type="java-method">
++          <url>file://$PROJECT_DIR$/src/VentanaLogin.java</url>
++          <line>42</line>
++          <properties class="VentanaLogin" method="verificarCredencialeseIniciarSesion">
++            <option name="EMULATED" value="true" />
++            <option name="WATCH_EXIT" value="false" />
++          </properties>
++          <option name="timeStamp" value="15" />
+         </line-breakpoint>
+       </breakpoints>
+     </breakpoint-manager>
+Index: src/VentanaLogin.form
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/VentanaLogin.form b/src/VentanaLogin.form
+new file mode 100644
+--- /dev/null	(date 1701537883355)
++++ b/src/VentanaLogin.form	(date 1701537883355)
+@@ -0,0 +1,69 @@
++<?xml version="1.0" encoding="UTF-8"?>
++<form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="VentanaLogin">
++  <grid id="27dc6" binding="MiPanel" layout-manager="GridLayoutManager" row-count="4" column-count="3" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
++    <margin top="0" left="0" bottom="0" right="0"/>
++    <constraints>
++      <xy x="20" y="20" width="500" height="400"/>
++    </constraints>
++    <properties/>
++    <border type="none"/>
++    <children>
++      <component id="3a360" class="javax.swing.JLabel">
++        <constraints>
++          <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
++        </constraints>
++        <properties>
++          <text value="Correo:"/>
++        </properties>
++      </component>
++      <component id="2a820" class="javax.swing.JLabel">
++        <constraints>
++          <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
++        </constraints>
++        <properties>
++          <text value="Contraseña:"/>
++        </properties>
++      </component>
++      <component id="944b6" class="javax.swing.JPasswordField" binding="pswContraseña">
++        <constraints>
++          <grid row="2" column="1" row-span="1" col-span="2" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
++            <preferred-size width="150" height="-1"/>
++          </grid>
++        </constraints>
++        <properties/>
++      </component>
++      <component id="efac8" class="javax.swing.JTextField" binding="txtCorreo">
++        <constraints>
++          <grid row="1" column="1" row-span="1" col-span="2" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
++            <preferred-size width="150" height="-1"/>
++          </grid>
++        </constraints>
++        <properties/>
++      </component>
++      <component id="8c03f" class="javax.swing.JLabel">
++        <constraints>
++          <grid row="0" column="0" row-span="1" col-span="3" vsize-policy="0" hsize-policy="0" anchor="1" fill="0" indent="0" use-parent-layout="false"/>
++        </constraints>
++        <properties>
++          <text value="Ingresar"/>
++        </properties>
++      </component>
++      <component id="ce5d9" class="javax.swing.JButton" binding="btnNuevo">
++        <constraints>
++          <grid row="3" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
++        </constraints>
++        <properties>
++          <text value="Crear Cuenta"/>
++        </properties>
++      </component>
++      <component id="e83e9" class="javax.swing.JButton" binding="btnIngresar">
++        <constraints>
++          <grid row="3" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
++        </constraints>
++        <properties>
++          <text value="Ingresar"/>
++        </properties>
++      </component>
++    </children>
++  </grid>
++</form>
+Index: src/VentanaLogin.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/VentanaLogin.java b/src/VentanaLogin.java
+new file mode 100644
+--- /dev/null	(date 1701537883355)
++++ b/src/VentanaLogin.java	(date 1701537883355)
+@@ -0,0 +1,107 @@
++import javax.swing.*;
++import java.awt.event.ActionEvent;
++import java.awt.event.ActionListener;
++import java.io.BufferedReader;
++import java.io.FileReader;
++import java.io.IOException;
++
++public class VentanaLogin extends JFrame {
++    private JPasswordField pswContraseña;
++    private JTextField txtCorreo;
++    private JButton btnNuevo;
++    private JButton btnIngresar;
++    public JPanel MiPanel;
++
++    public VentanaLogin() {
++        btnNuevo.addActionListener(new ActionListener() {
++            @Override
++            public void actionPerformed(ActionEvent e) {
++                abrirVentanaRegistro();
++            }
++        });
++        btnIngresar.addActionListener(new ActionListener() {
++            @Override
++            public void actionPerformed(ActionEvent e) {
++                verificarCredencialeseIniciarSesion();
++            }
++        });
++    }
++
++    private void abrirVentanaRegistro() {
++        // Cerrar la ventana actual
++        this.dispose();
++
++        // Crear e mostrar la ventana de registro
++        VentanaRegistro ventanaRegistro = new VentanaRegistro();
++        JFrame frame = new JFrame("VentanaRegistro");
++        frame.setContentPane(ventanaRegistro.MiPanel);
++        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);  // Ajusta según tus necesidades
++        frame.pack();
++        frame.setVisible(true);
++    }
++
++    private void verificarCredencialeseIniciarSesion() {
++        String correoIngresado = txtCorreo.getText();
++        char[] contraseñaIngresada = pswContraseña.getPassword();
++        String contraseñaIngresadaStr = new String(contraseñaIngresada);
++
++        try (BufferedReader br = new BufferedReader(new FileReader("Registro.txt"))) {
++            String line;
++            boolean credencialesCorrectas = false;
++            String correoEnRegistro = "";
++            String contraseñaEnRegistro = "";
++
++            while ((line = br.readLine()) != null) {
++                if (line.startsWith("Email:")) {
++                    // Extraer el correo de la línea
++                    correoEnRegistro = obtenerValorDespuesDeCadena(line, "Email:");
++                } else if (line.startsWith("Contraseña:")) {
++                    // Extraer la contraseña de la línea
++                    contraseñaEnRegistro = obtenerValorDespuesDeCadena(line, "Contraseña:");
++
++                    if (correoIngresado.trim().equals(correoEnRegistro.trim()) && contraseñaIngresadaStr.trim().equals(contraseñaEnRegistro.trim())) {
++                        // Las credenciales coinciden
++                        credencialesCorrectas = true;
++                        break;
++                    }
++                }
++            }
++
++
++            if (credencialesCorrectas) {
++                JOptionPane.showMessageDialog(this, "Inicio de sesión exitoso", "Éxito", JOptionPane.INFORMATION_MESSAGE);
++                this.dispose();
++                VentanaMenu ventanaMenu = new VentanaMenu();
++                JFrame frame = new JFrame("VentanaMenu");
++                frame.setContentPane(ventanaMenu.MiPanel);
++                frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);  // Ajusta según tus necesidades
++                frame.pack();
++                frame.setVisible(true);
++            } else {
++                JOptionPane.showMessageDialog(this, "La contraseña es incorrecta", "Error", JOptionPane.ERROR_MESSAGE);
++            }
++        } catch (IOException ex) {
++            ex.printStackTrace();
++            JOptionPane.showMessageDialog(this, "Error al verificar credenciales", "Error", JOptionPane.ERROR_MESSAGE);
++        }
++    }
++
++    private String obtenerValorDespuesDeCadena(String linea, String cadena) {
++        int indiceCadena = linea.indexOf(cadena);
++        if (indiceCadena != -1) {
++            // Si la cadena se encuentra, devolver la parte después de la cadena
++            return linea.substring(indiceCadena + cadena.length()).trim();
++        } else {
++            // Si la cadena no se encuentra, devolver una cadena vacía o manejar el caso según sea necesario
++            return "";
++        }
++    }
++    public static void main(String[] args) {
++        VentanaLogin login = new VentanaLogin();
++        login.setContentPane(login.MiPanel);
++        login.setSize(500,300);
++        login.setDefaultCloseOperation(EXIT_ON_CLOSE);
++        login.setVisible(true);
++    }
++}
++
+Index: src/VentanaMenu.form
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/VentanaMenu.form b/src/VentanaMenu.form
+new file mode 100644
+--- /dev/null	(date 1701537883356)
++++ b/src/VentanaMenu.form	(date 1701537883356)
+@@ -0,0 +1,61 @@
++<?xml version="1.0" encoding="UTF-8"?>
++<form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="VentanaMenu">
++  <grid id="27dc6" binding="MiPanel" layout-manager="GridLayoutManager" row-count="4" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
++    <margin top="0" left="0" bottom="0" right="0"/>
++    <constraints>
++      <xy x="20" y="20" width="500" height="400"/>
++    </constraints>
++    <properties/>
++    <border type="none"/>
++    <children>
++      <component id="65e86" class="javax.swing.JLabel">
++        <constraints>
++          <grid row="0" column="0" row-span="1" col-span="2" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
++        </constraints>
++        <properties>
++          <text value="Clinica general &quot;Solsticio de verano&quot;"/>
++        </properties>
++      </component>
++      <component id="6afd9" class="javax.swing.JLabel">
++        <constraints>
++          <grid row="1" column="0" row-span="1" col-span="2" vsize-policy="0" hsize-policy="0" anchor="1" fill="0" indent="0" use-parent-layout="false"/>
++        </constraints>
++        <properties>
++          <text value="Bievenido al Menu Principal"/>
++        </properties>
++      </component>
++      <component id="c2f1a" class="javax.swing.JButton" binding="btnDoctores">
++        <constraints>
++          <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
++        </constraints>
++        <properties>
++          <text value="Ir a Doctores"/>
++        </properties>
++      </component>
++      <component id="5c0b9" class="javax.swing.JButton" binding="btnPacientes">
++        <constraints>
++          <grid row="2" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
++        </constraints>
++        <properties>
++          <text value="Ir a Pacientes"/>
++        </properties>
++      </component>
++      <component id="e0166" class="javax.swing.JButton" binding="btnCita">
++        <constraints>
++          <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
++        </constraints>
++        <properties>
++          <text value="Crear Cita"/>
++        </properties>
++      </component>
++      <component id="84621" class="javax.swing.JButton" binding="btnRegreso">
++        <constraints>
++          <grid row="3" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
++        </constraints>
++        <properties>
++          <text value="Cerrar sesión"/>
++        </properties>
++      </component>
++    </children>
++  </grid>
++</form>
