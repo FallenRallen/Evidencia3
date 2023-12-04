@@ -57,11 +57,10 @@ public class VentanaRegistro extends JFrame{
         // Guardar datos en el archivo Registro.txt
         try (BufferedWriter writer = new BufferedWriter(new FileWriter("Registro.txt", true))) {
             // Agregar datos al archivo
-            writer.write("Nombre:" + nombre + "\n");
+
             writer.write("Email:" + email + "\n");
-            writer.write("Edad:" + edad + "\n");
-            writer.write("Tipo de Usuario:" + tipoUsuario + "\n");
             writer.write("Contraseña:" + contraseña + "\n");
+            writer.write("Tipo de Usuario:" + tipoUsuario + "\n");
             writer.write("\n");  // Separador entre registros
 
             // Mensaje de éxito

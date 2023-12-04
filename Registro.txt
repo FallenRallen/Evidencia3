@@ -1,12 +1,11 @@
-Nombre:Jorge
 Email:Jorge@gmail.com
-Edad:22
-Tipo de Usuario:Paciente
 Contraseña:1234
-
-Nombre:Rallen
-Email:Rallen@hotmail.com
-Edad:22
 Tipo de Usuario:Paciente
-Contraseña:4321
+
+Email:Rallen@gmail.com
+Contraseña:2345
+Tipo de Usuario:Doctor
+Email:Andre@hotmail.com
+Contraseña:112233
+Tipo de Usuario:Doctor
 
