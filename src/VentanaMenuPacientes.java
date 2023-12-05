@@ -41,17 +41,22 @@ public class VentanaMenuPacientes extends JFrame {
 
     private void abrirArchivo(String nombreArchivo) {
         try (BufferedReader br = new BufferedReader(new FileReader(nombreArchivo))) {
+            // StringBuilder para almacenar el contenido del archivo
             StringBuilder contenido = new StringBuilder();
             String linea;
 
+            // Leer cada línea del archivo y concatenarla en el StringBuilder
             while ((linea = br.readLine()) != null) {
                 contenido.append(linea).append("\n");
             }
 
-            // Puedes mostrar el contenido en un cuadro de diálogo o realizar otras acciones según tus necesidades
+            // Mostrar el contenido en un cuadro de diálogo
             JOptionPane.showMessageDialog(this, "Contenido de " + nombreArchivo + ":\n" + contenido.toString(), "Archivo Abierto", JOptionPane.INFORMATION_MESSAGE);
         } catch (IOException ex) {
+            // Imprimir la traza de la excepción en caso de error durante la lectura
             ex.printStackTrace();
+
+            // Mostrar un mensaje de error en caso de problemas durante la apertura del archivo
             JOptionPane.showMessageDialog(this, "Error al abrir el archivo " + nombreArchivo, "Error", JOptionPane.ERROR_MESSAGE);
         }
     }

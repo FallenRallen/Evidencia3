@@ -1,0 +1,10 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="Evidencia3:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/Evidencia3_jar</output-path>
+    <root id="archive" name="Evidencia3.jar">
+      <element id="directory" name="META-INF">
+        <element id="file-copy" path="$PROJECT_DIR$/src/META-INF/MANIFEST.MF" />
+      </element>
+    </root>
+  </artifact>
+</component>

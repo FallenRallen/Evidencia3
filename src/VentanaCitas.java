@@ -57,7 +57,8 @@ public class VentanaCitas extends JFrame {
         });
     }
 
-    public class Citas{
+    public class Citas {
+        // Atributos de la clase Citas
         private String paciente;
         private String id;
         private String fecha;
@@ -65,7 +66,18 @@ public class VentanaCitas extends JFrame {
         private String datos;
         private String observaciones;
 
-        public Citas(String paciente, String id, String fecha, String hora, String datos, String observaciones){
+        /**
+         * Constructor de la clase Citas que inicializa sus atributos con los valores proporcionados.
+         *
+         * @param paciente      El nombre del paciente asociado a la cita.
+         * @param id            El identificador único de la cita.
+         * @param fecha         La fecha de la cita en formato de cadena.
+         * @param hora          La hora de la cita en formato de cadena.
+         * @param datos         Información adicional sobre la cita o el paciente.
+         * @param observaciones Observaciones asociadas a la cita médica.
+         */
+        public Citas(String paciente, String id, String fecha, String hora, String datos, String observaciones) {
+            // Inicializar los atributos con los valores proporcionados en el constructor
             this.paciente = paciente;
             this.id = id;
             this.fecha = fecha;
@@ -74,16 +86,20 @@ public class VentanaCitas extends JFrame {
             this.observaciones = observaciones;
         }
     }
-    public void limpiarCampos(){
+    public void limpiarCampos() {
+        // Establecer el texto de los campos de texto y el área de observaciones como una cadena vacía
         txtID.setText("");
         txtFecha.setText("");
         txtHora.setText("");
         txtPaciente.setText("");
         txtAreaObservaciones.setText("");
         txtDatosPaciente.setText("");
+
+        // Mostrar un mensaje de notificación indicando que la limpieza fue exitosa
         JOptionPane.showMessageDialog(this, "Limpieza Exitosa");
     }
-    private void VerificarEInsertarEnArchivo(){
+    private void VerificarEInsertarEnArchivo() {
+        // Obtener los datos de la cita desde los campos de texto
         String idTxt = txtID.getText();
         String fecha = txtFecha.getText();
         String hora = txtHora.getText();
@@ -94,22 +110,37 @@ public class VentanaCitas extends JFrame {
         // Verificar que las fechas y horas tengan el formato correcto y sean válidas
         if (verificarFormatoFecha(fecha) && verificarFormatoHora(hora) &&
                 !idTxt.isEmpty() && !paciente.isEmpty() && !datos.isEmpty() && !observaciones.isEmpty()) {
+            // Crear un objeto de la clase Citas con los datos proporcionados
             Citas newCita = new Citas(paciente, idTxt, fecha, hora, datos, observaciones);
+
+            // Insertar la cita en el archivo "Citas.txt"
             InsertarCita(newCita);
-            JOptionPane.showMessageDialog(this, "Cita Insertada en el Archivo:\n" + "Paciente: " + newCita.paciente + "\n" + "ID: " + newCita.id + "\n" + "Fecha: " + newCita.fecha + "\n" + "Hora: " + newCita.hora + "\n" + "Datos: " + newCita.datos + "\n" + "Observaciones: " + newCita.observaciones);
+
+            // Mostrar un mensaje indicando que la cita se insertó correctamente
+            JOptionPane.showMessageDialog(this, "Cita Insertada en el Archivo:\n" +
+                    "Paciente: " + newCita.paciente + "\n" +
+                    "ID: " + newCita.id + "\n" +
+                    "Fecha: " + newCita.fecha + "\n" +
+                    "Hora: " + newCita.hora + "\n" +
+                    "Datos: " + newCita.datos + "\n" +
+                    "Observaciones: " + newCita.observaciones);
         } else {
+            // Mostrar un mensaje de error si los datos no son válidos o algún campo está vacío
             JOptionPane.showMessageDialog(this, "Por favor, complete todos los campos correctamente", "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 
-
     private void buscarPacientePorID(String id) {
+        // Definir el nombre del archivo de pacientes
         String archivoPacientes = "Pacientes.txt";
+
+        // Bandera para indicar si se encontró el paciente
         boolean pacienteEncontrado = false;
 
         try (BufferedReader br = new BufferedReader(new FileReader(archivoPacientes))) {
             String line;
 
+            // Leer el archivo de pacientes línea por línea
             while ((line = br.readLine()) != null) {
                 // Asumiendo que las líneas en el archivo tienen el formato "Nombre, ID, Edad, Teléfono, Género"
                 String[] partes = line.split(", ");
@@ -117,29 +148,43 @@ public class VentanaCitas extends JFrame {
                 // Verificar si la línea contiene el ID buscado
                 if (partes.length >= 2) {
                     String idEnArchivo = partes[1].trim();
+
+                    // Se encontró el paciente con el ID especificado
                     if (idEnArchivo.equals(id)) {
-                        // Se encontró el paciente con el ID especificado
+                        // Formatear los datos del paciente
                         String datosPaciente = obtenerDatosPacienteDesdeLinea(line);
+
+                        // Mostrar los datos del paciente en la interfaz
                         txtDatosPaciente.setText(datosPaciente);
                         JOptionPane.showMessageDialog(this, datosPaciente);
+
+                        // Establecer la bandera de paciente encontrado y salir del bucle
                         pacienteEncontrado = true;
                         break;
                     }
                 }
             }
 
+            // Verificar si se encontró el paciente
             if (!pacienteEncontrado) {
                 JOptionPane.showMessageDialog(this, "Paciente no encontrado", "Error", JOptionPane.ERROR_MESSAGE);
+
+                // Limpiar el campo de texto de datos del paciente
                 txtDatosPaciente.setText("");
             }
         } catch (IOException e) {
+            // Imprimir la traza de la excepción en caso de error durante la lectura
             e.printStackTrace();
+
+            // Mostrar un mensaje de error en caso de problemas durante la búsqueda del paciente
             JOptionPane.showMessageDialog(this, "Error al buscar paciente", "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
     private String obtenerDatosPacienteDesdeLinea(String linea) {
         // Asumiendo que las líneas en el archivo tienen el formato "Nombre, ID, Edad, Teléfono, Género"
         String[] partes = linea.split(", ");
+
+        // Extraer cada parte de la línea
         String nombre = partes[0].trim();
         String id = partes[1].trim();
         String edad = partes[2].trim();
@@ -147,32 +192,7 @@ public class VentanaCitas extends JFrame {
         String genero = partes[4].trim();
 
         // Formatear los datos según tus necesidades
-        String datosFormateados = "Nombre: " + nombre + "\nID: " + id + "\nEdad: " + edad + "\nTeléfono: " + telefono + "\nGénero: " + genero;
-
-        return datosFormateados;
-    }
-
-    private String obtenerValorDespuesDeCadena(String linea, String cadena) {
-        int indiceCadena = linea.indexOf(cadena);
-
-        if (indiceCadena != -1) {
-            // Asegurar que la cadena no está al final de la línea
-            if (indiceCadena + cadena.length() < linea.length()) {
-                // Extraer el valor después de la cadena
-                String valor = linea.substring(indiceCadena + cadena.length()).trim();
-
-                // Si el valor contiene una coma, solo tomar la parte antes de la coma
-                int indiceComa = valor.indexOf(",");
-                if (indiceComa != -1) {
-                    valor = valor.substring(0, indiceComa).trim();
-                }
-
-                return valor;
-            }
-        }
-
-        // Si la cadena no se encuentra o está al final de la línea, devolver una cadena vacía
-        return "";
+        return "Nombre: " + nombre + "\nID: " + id + "\nEdad: " + edad + "\nTeléfono: " + telefono + "\nGénero: " + genero;
     }
 
     private boolean verificarFormatoFecha(String fecha) {
@@ -180,9 +200,11 @@ public class VentanaCitas extends JFrame {
         dateFormat.setLenient(false);
 
         try {
+            // Intentar parsear la cadena como fecha
             Date parsedDate = dateFormat.parse(fecha);
             return true;
         } catch (ParseException e) {
+            // Capturar excepción en caso de error durante el parseo
             return false;
         }
     }
@@ -192,29 +214,55 @@ public class VentanaCitas extends JFrame {
         timeFormat.setLenient(false);
 
         try {
+            // Intentar parsear la cadena como hora
             Date parsedTime = timeFormat.parse(hora);
             return true;
         } catch (ParseException e) {
+            // Capturar excepción en caso de error durante el parseo
             return false;
         }
     }
-    private void InsertarCita(Citas newCita){
+    private void InsertarCita(Citas newCita) {
+        // Definir el nombre del archivo
         String Archivo = "Citas.txt";
 
-        try(BufferedWriter escritor = new BufferedWriter(new FileWriter(Archivo, true))){
-            escritor.write(newCita.paciente + ", " + newCita.id + ", " + newCita.fecha+ ", " + newCita.hora + ", " + newCita.datos + ", " + newCita.observaciones + "\n");
-        } catch (IOException e){
+        try (BufferedWriter escritor = new BufferedWriter(new FileWriter(Archivo, true))) {
+            // Escribir la información de la nueva cita en el archivo
+            escritor.write(newCita.paciente + ", " + newCita.id + ", " + newCita.fecha + ", "
+                    + newCita.hora + ", " + newCita.datos + ", " + newCita.observaciones + "\n");
+        } catch (IOException e) {
+            // Imprimir la traza de la excepción en caso de error durante la escritura
             e.printStackTrace();
         }
     }
 
-    private int GenerarNumRandom(){
+    /**
+     * Genera un número aleatorio de cuatro dígitos y lo devuelve.
+     *
+     * Este método utiliza la clase Random para generar un número aleatorio de cuatro dígitos,
+     * que se utiliza para construir un ID único para algún propósito específico.
+     *
+     * @return Un número aleatorio de cuatro dígitos.
+     */
+    private int GenerarNumRandom() {
         Random random = new Random();
-        return random.nextInt(9000)+1000;
+        return random.nextInt(9000) + 1000;
     }
+
+    /**
+     * Genera un ID único utilizando un número aleatorio y lo muestra en el campo de texto de la interfaz de usuario.
+     *
+     * Este método llama a GenerarNumRandom para obtener un número aleatorio de cuatro dígitos,
+     * lo concatena con la letra "C" y establece el resultado como el texto del campo de texto "txtID".
+     */
     private void InsertarIDEnTextPanel() {
+        // Generar un número aleatorio de cuatro dígitos
         int numran = GenerarNumRandom();
+
+        // Construir el ID agregando la letra "C" al número aleatorio
         String idRan = "C" + numran;
+
+        // Establecer el ID generado como texto en el campo de texto "txtID"
         txtID.setText(idRan);
     }
 

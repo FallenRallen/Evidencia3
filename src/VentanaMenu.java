@@ -1,4 +1,3 @@
-import javax.imageio.spi.IIORegistry;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -44,18 +43,17 @@ public class VentanaMenu extends JFrame{
         });
     }
 
-    private void irDoctores(){
+    private void irDoctores() {
+        // Crear e mostrar la ventana de registro
+        InsertarDoctor insertarDoctor = new InsertarDoctor();
+        JFrame frame = new JFrame("InsertarDoctor");
+        frame.setContentPane(insertarDoctor.MiPanel);
+        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        frame.pack();
+        frame.setVisible(true);
 
-            // Crear e mostrar la ventana de registro
-            InsertarDoctor insertarDoctor = new InsertarDoctor();
-            JFrame frame = new JFrame("InsertarDoctor");
-            frame.setContentPane(insertarDoctor.MiPanel);
-            frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-            frame.pack();
-            frame.setVisible(true);
-
+        // Cerrar la ventana actual
         this.dispose();
-
     }
 
     private void irPacientes(){

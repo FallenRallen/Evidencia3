@@ -4,18 +4,19 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="4626b4c4-72a3-43a5-93e8-c3876e5a2187" name="Changes" comment="AVANCE 4 DE EVIDENCIA FINAL">
-      <change afterPath="$PROJECT_DIR$/src/VentanaCitas.form" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/VentanaCitas.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/VentanaMenuPacientes.form" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/VentanaMenuPacientes.java" afterDir="false" />
+    <list default="true" id="4626b4c4-72a3-43a5-93e8-c3876e5a2187" name="Changes" comment="AVANCE FINAL DE EVIDENCIA FINAL">
+      <change afterPath="$PROJECT_DIR$/.idea/artifacts/Evidencia3_jar.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/META-INF/MANIFEST.MF" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Citas.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Citas.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Registro.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Registro.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/InsertarDoctor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/InsertarDoctor.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/VentanaLogin.form" beforeDir="false" afterPath="$PROJECT_DIR$/src/VentanaLogin.form" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/VentanaCitas.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/VentanaCitas.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/VentanaLogin.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/VentanaLogin.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/VentanaMenu.form" beforeDir="false" afterPath="$PROJECT_DIR$/src/VentanaMenu.form" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/VentanaMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/VentanaMenu.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/VentanaMenuPacientes.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/VentanaMenuPacientes.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/VentanaPaciente.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/VentanaPaciente.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/VentanaRegistro.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/VentanaRegistro.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -54,9 +55,10 @@
     &quot;UI_DESIGNER_EDITOR_MODE.UIDesignerToolWindowManager.SHOW&quot;: &quot;true&quot;,
     &quot;UI_DESIGNER_EDITOR_MODE.UIDesignerToolWindowManager.WIDTH&quot;: &quot;244&quot;,
     &quot;git-widget-placeholder&quot;: &quot;master&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
-    &quot;project.structure.proportion&quot;: &quot;0.0&quot;,
-    &quot;project.structure.side.proportion&quot;: &quot;0.0&quot;
+    &quot;last_opened_file_path&quot;: &quot;C:/Computacion en java/Evidencia3/src/META-INF/MANIFEST.MF&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Artifacts&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;
   }
 }</component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
@@ -124,7 +126,31 @@
       <option name="project" value="LOCAL" />
       <updated>1701538085485</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="AVANCE FINAL DE EVIDENCIA FINAL">
+      <option name="closed" value="true" />
+      <created>1701710838331</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1701710838331</updated>
+    </task>
+    <task id="LOCAL-00009" summary="AVANCE FINAL DE EVIDENCIA FINAL">
+      <option name="closed" value="true" />
+      <created>1701710916825</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1701710916825</updated>
+    </task>
+    <task id="LOCAL-00010" summary="AVANCE FINAL DE EVIDENCIA FINAL">
+      <option name="closed" value="true" />
+      <created>1701710944419</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1701710944419</updated>
+    </task>
+    <option name="localTasksCounter" value="11" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -141,7 +167,8 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="AVANCE 2 DE EVIDENCIA FINAL" />
     <MESSAGE value="AVANCE 4 DE EVIDENCIA FINAL" />
-    <option name="LAST_COMMIT_MESSAGE" value="AVANCE 4 DE EVIDENCIA FINAL" />
+    <MESSAGE value="AVANCE FINAL DE EVIDENCIA FINAL" />
+    <option name="LAST_COMMIT_MESSAGE" value="AVANCE FINAL DE EVIDENCIA FINAL" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -158,17 +185,13 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/InsertarDoctor.java</url>
-          <line>101</line>
+          <line>118</line>
           <option name="timeStamp" value="13" />
         </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-method">
+        <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/InsertarDoctor.java</url>
-          <line>123</line>
-          <properties class="InsertarDoctor" method="VerificarEInsertarEnArchivo">
-            <option name="EMULATED" value="true" />
-            <option name="WATCH_EXIT" value="false" />
-          </properties>
-          <option name="timeStamp" value="12" />
+          <line>42</line>
+          <option name="timeStamp" value="14" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
