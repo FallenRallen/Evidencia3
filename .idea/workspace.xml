@@ -4,20 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="4626b4c4-72a3-43a5-93e8-c3876e5a2187" name="Changes" comment="AVANCE FINAL DE EVIDENCIA FINAL">
-      <change afterPath="$PROJECT_DIR$/.idea/artifacts/Evidencia3_jar.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/META-INF/MANIFEST.MF" afterDir="false" />
+    <list default="true" id="4626b4c4-72a3-43a5-93e8-c3876e5a2187" name="Changes" comment="Evidencia final terminada">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Citas.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Citas.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Registro.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Registro.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/InsertarDoctor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/InsertarDoctor.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/VentanaCitas.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/VentanaCitas.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/VentanaLogin.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/VentanaLogin.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/VentanaMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/VentanaMenu.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/VentanaMenuPacientes.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/VentanaMenuPacientes.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/VentanaPaciente.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/VentanaPaciente.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/VentanaRegistro.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/VentanaRegistro.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Doctores.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Doctores.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/META-INF/MANIFEST.MF" beforeDir="false" afterPath="$PROJECT_DIR$/src/META-INF/MANIFEST.MF" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -150,7 +141,15 @@
       <option name="project" value="LOCAL" />
       <updated>1701710944419</updated>
     </task>
-    <option name="localTasksCounter" value="11" />
+    <task id="LOCAL-00011" summary="Evidencia final terminada">
+      <option name="closed" value="true" />
+      <created>1701739536556</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1701739536556</updated>
+    </task>
+    <option name="localTasksCounter" value="12" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -168,7 +167,8 @@
     <MESSAGE value="AVANCE 2 DE EVIDENCIA FINAL" />
     <MESSAGE value="AVANCE 4 DE EVIDENCIA FINAL" />
     <MESSAGE value="AVANCE FINAL DE EVIDENCIA FINAL" />
-    <option name="LAST_COMMIT_MESSAGE" value="AVANCE FINAL DE EVIDENCIA FINAL" />
+    <MESSAGE value="Evidencia final terminada" />
+    <option name="LAST_COMMIT_MESSAGE" value="Evidencia final terminada" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
